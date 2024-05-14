@@ -47,13 +47,36 @@ struct songView: View {
     @State private var isHoveringKey: Bool = false
     @State private var isHoveringNotes: Bool = false
     
+    @State private var showAlert = false
+    
     // for drop down menu in stage
     let options = ["Completed", "Mastering", "Mixing", "Arranging", "Ideas"]
     
-    func openFile(at path: String) {
-            let url = URL(fileURLWithPath: path)
-            NSWorkspace.shared.open(url)
+    func openFile(with bookmarkData: Data) {
+        var isStale = false
+        do {
+            // Resolve the bookmark data to a URL
+            let url = try URL(resolvingBookmarkData: bookmarkData, options: .withSecurityScope, relativeTo: nil, bookmarkDataIsStale: &isStale)
+            
+            if isStale {
+                // Handle the case where the bookmark data has become stale
+                print("Bookmark data is stale, needs to be refreshed.")
+                return
+            }
+
+            // Start accessing the security-scoped resource
+            if url.startAccessingSecurityScopedResource() {
+                // Open the file with the resolved URL
+                NSWorkspace.shared.open(url)
+                
+                // When finished, stop accessing the security-scoped resource
+                url.stopAccessingSecurityScopedResource()
+            }
+        } catch {
+            print("Failed to resolve bookmark data: \(error)")
         }
+    }
+
     
     
     // function that removes the current song from the database
@@ -98,10 +121,11 @@ struct songView: View {
                             
                             
                             Button(action: {
-                                if let path = currentSong?.filePath {
-                                    openFile(at: path)
-                                } else {
+                                if let bookmarkData = currentSong?.bookmarkData {
+                                        openFile(with: bookmarkData)
+                                    } else {
                                     print("No file path available")
+                                        self.showAlert = true;
                                     // Optionally handle the error, e.g., show an alert
                                 }
                             }) {
@@ -109,6 +133,13 @@ struct songView: View {
                                     .font(.title)
                                     .foregroundColor(.white)
                             }
+                     //       alert(isPresented: $showAlert) {
+                     //           Alert(
+                     //               title: Text("Error"),
+                     //               message: Text("No file path available for the selected song."),
+                     //               dismissButton: .default(Text("OK"))
+                     //           )
+                     //       }
 
                             
                             
@@ -649,7 +680,7 @@ struct songView: View {
 struct songView_Previews: PreviewProvider {
     static var previews: some View {
         // Make the sample song optional
-             let sampleSong: song? = song(title: "Good Morning", filePath: "asdfasdf", tempo: 120, genre: "Rap", key: "F# Minor", starRating: 3, notes: "A great song", sta: "Completed")
+        let sampleSong: song? = song(title: "Good Morning", filePath: "asdfasdf", tempo: 120, genre: "Rap", key: "F# Minor", starRating: 3, notes: "A great song", stage: "Completed",bookmarkData: nil)
              
              // Create a constant binding to an optional song
              let songBinding = Binding.constant(sampleSong)

@@ -62,7 +62,7 @@ struct AddsongForm: View {
     @Binding var showingAddSongForm: Bool
     @Environment(\.modelContext) public var modelContext // where songs are getting stored
     @Query private var songs: [song] // where songs are stored
-
+    
     // variables to store input
     @State private var buttonText = "Add"
     @State private var songName: String = ""
@@ -72,12 +72,14 @@ struct AddsongForm: View {
     @State var startrate: String = ""
     @State var notesInput: String = ""
     @State var stagein: String = ""
-
+    @State private var bookmarkDataa: Data? = nil
+    
+    
     // var for file path
     @State private var selectedFilePath: String?
     
-   // let stageOptions = ["Completed", "Mastering", "Mixing","Arranging", "Ideas"]
-
+    // let stageOptions = ["Completed", "Mastering", "Mixing","Arranging", "Ideas"]
+    
     
     var body: some View {
         VStack(spacing: 20) {
@@ -110,9 +112,9 @@ struct AddsongForm: View {
             .padding(.leading, 40)
             
             HStack {
-               // RoundedRectangle(cornerRadius: 15, style: .continuous)
-               //     .frame(height: 3)
-               // .opacity(0.4)
+                // RoundedRectangle(cornerRadius: 15, style: .continuous)
+                //     .frame(height: 3)
+                // .opacity(0.4)
                 Spacer()
             }
             HStack {
@@ -130,18 +132,18 @@ struct AddsongForm: View {
                         TextField("Song Name", text: $songName)
                             .textFieldStyle(myRoundedTextFieldStyle())
                         
-                          
+                        
                     }
                     .padding(.bottom, 20)
                     
-                   
+                    
                     
                     VStack {
                         HStack {
                             Text("Genre")
                                 .font(.title2)
                                 .fontWeight(.medium)
-                                
+                            
                             Spacer()
                         }
                         TextField("Song Genre", text: $songG)
@@ -149,7 +151,7 @@ struct AddsongForm: View {
                     }
                     .padding(.bottom, 20)
                     
-                   
+                    
                     
                     VStack {
                         HStack {
@@ -158,7 +160,7 @@ struct AddsongForm: View {
                                 .fontWeight(.medium)
                             Spacer()
                             
-                           
+                            
                         }
                         TextField("Song Tempo", text: $songtempo)
                             .textFieldStyle(myRoundedTextFieldStyle())
@@ -191,7 +193,7 @@ struct AddsongForm: View {
                     }
                     .padding(.bottom, 20)
                     
-                   
+                    
                     
                 } // end of left side vstack
                 
@@ -225,7 +227,7 @@ struct AddsongForm: View {
                             
                             
                         }
-                     
+                        
                         HStack {
                             DropdownMenuView(selectedOption: $stagein)
                             Spacer()
@@ -244,23 +246,23 @@ struct AddsongForm: View {
                             
                             
                         }
-                     
+                        
                         HStack {
                             Button(action: {
                                 openFileSelectionDialog()
                             }) {
                                 Label {
                                     Image(systemName: "doc.badge.plus")
-                                         .font(.system(size: 18))
+                                        .font(.system(size: 18))
                                 } icon: {
-                                   
+                                    
                                 }
                                 .padding()  // Apply padding to the entire Label
                                 .background(Color.gray.opacity(0.4))  // Background applied to the entire Label
                                 .foregroundColor(.white)  // Foreground color applied to the entire Label
                                 .cornerRadius(10)  // Corner radius applied to the entire Label
                             }
-
+                            
                             Spacer()
                         }
                         
@@ -268,7 +270,7 @@ struct AddsongForm: View {
                     .padding(.bottom, 20)
                     
                     
-                   
+                    
                     Spacer()
                     Spacer()
                 } // end of right side vstack
@@ -277,66 +279,66 @@ struct AddsongForm: View {
                 Spacer()
                 
                 
-               
+                
             }
             .padding(.leading, 40) // end of hstack
             
-                HStack {
-                    Button(action: {
-                        if addItem() {
-                                    self.buttonText = "Song added!"
-                                } else {
-                                    self.buttonText = "failed, try again"
-                                }
-                    }) {
-                        
-                        Text(buttonText)
-                            .padding(.horizontal, 100)
-                            .padding(.vertical)
-                            .background(Color.gray.opacity(0.4))  // Background applied to the entire Label
-                            .foregroundColor(.white)  // Foreground color applied to the entire Label
-                            .cornerRadius(10)  // Corner radius applied to the entire Label
-                    
-                        
+            HStack {
+                Button(action: {
+                    if addItem() {
+                        self.buttonText = "Song added!"
+                    } else {
+                        self.buttonText = "failed, try again"
                     }
+                }) {
+                    
+                    Text(buttonText)
+                        .padding(.horizontal, 100)
+                        .padding(.vertical)
+                        .background(Color.gray.opacity(0.4))  // Background applied to the entire Label
+                        .foregroundColor(.white)  // Foreground color applied to the entire Label
+                        .cornerRadius(10)  // Corner radius applied to the entire Label
+                    
                     
                 }
-                .padding(.bottom, 30)
+                
+            }
+            .padding(.bottom, 30)
             
-           
+            
             // Dropdown menu for stage selection
             // Segmented control for stage selection
-      //      Picker(selection: $stagein, label: Text("Stage of Production")) {
-      //          ForEach(stageOptions, id: \.self) { option in
-      //              Text(option)
-      //          }
-      //      }
-      //      .pickerStyle(SegmentedPickerStyle()) // Apply segmented control style
-      //
+            //      Picker(selection: $stagein, label: Text("Stage of Production")) {
+            //          ForEach(stageOptions, id: \.self) { option in
+            //              Text(option)
+            //          }
+            //      }
+            //      .pickerStyle(SegmentedPickerStyle()) // Apply segmented control style
+            //
             
             // end of selector
-       //     Button(action: {
-       //         openFileSelectionDialog()
-       //     }) {
-       //         Text("Select File")
-       //             .padding()
-       //             .foregroundColor(.white)
-       //             .background(Color.blue)
-       //             .cornerRadius(10)
-       //     }
-       //     Button(action: {
-       //         if addItem() {
-       //             self.buttonText = "Song added"
-       //         } else {
-       //             self.buttonText = "Invalid, try again"
-       //         }
-       //     }) {
-       //         Text(buttonText)
-       //             .padding()
-       //             .foregroundColor(.white)
-       //             .background(Color.blue)
-       //             .cornerRadius(10)
-       //     }
+            //     Button(action: {
+            //         openFileSelectionDialog()
+            //     }) {
+            //         Text("Select File")
+            //             .padding()
+            //             .foregroundColor(.white)
+            //             .background(Color.blue)
+            //             .cornerRadius(10)
+            //     }
+            //     Button(action: {
+            //         if addItem() {
+            //             self.buttonText = "Song added"
+            //         } else {
+            //             self.buttonText = "Invalid, try again"
+            //         }
+            //     }) {
+            //         Text(buttonText)
+            //             .padding()
+            //             .foregroundColor(.white)
+            //             .background(Color.blue)
+            //             .cornerRadius(10)
+            //     }
             
             //     Text("List of Songs Stored")
             //         .font(.headline)
@@ -355,20 +357,20 @@ struct AddsongForm: View {
             
             //                 .foregroundColor(.gray)
             //         }
-        
+            
             // }
         } // end of v stack
         .padding()
         .buttonStyle(PlainButtonStyle())
         
-       
+        
     }
-  
+    
     
     private func addItem() -> Bool {
         withAnimation {
             if let tempoin = Double(songtempo), let rating = Double(startrate) {
-                let newItem = song(title: songName, filePath: selectedFilePath!, tempo: tempoin, genre: songG, key: songkey, starRating: rating, notes: notesInput, sta:  stagein)
+                let newItem = song(title: songName, filePath: selectedFilePath!, tempo: tempoin, genre: songG, key: songkey, starRating: rating, notes: notesInput, stage:  stagein, bookmarkData: bookmarkDataa)
                 modelContext.insert(newItem)
                 return true
             } else {
@@ -376,23 +378,31 @@ struct AddsongForm: View {
             }
         }
     } // end of add item function
-
+    
     func openFileSelectionDialog() {
         let openPanel = NSOpenPanel()
         openPanel.allowsMultipleSelection = false
         openPanel.canChooseFiles = true
         openPanel.canChooseDirectories = false
-
+        
         openPanel.begin { result in
-            if result.rawValue == NSApplication.ModalResponse.OK.rawValue {
-                if let url = openPanel.urls.first {
-                    let filePath = url.path
-                    self.selectedFilePath = filePath
+            if result == .OK, let url = openPanel.urls.first {
+                // Saving the file path
+                self.selectedFilePath = url.path
+                
+                // Attempt to save the bookmark data
+                do {
+                    let bookmarkData = try url.bookmarkData(options: .withSecurityScope, includingResourceValuesForKeys: nil, relativeTo: nil)
+                    self.bookmarkDataa = bookmarkData
+                } catch {
+                    print("Failed to save bookmark data: \(error)")
+                    self.bookmarkDataa = nil  // Ensure the bookmark data is nil if there's an error
                 }
             }
         }
-    } // end of function open file
+    }
 }
+
 
     
 
