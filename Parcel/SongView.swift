@@ -14,7 +14,7 @@ import AppKit
 
 struct songView: View {
     @Binding var showingSongView: Bool
-    @Binding var currentSong: song?
+    @Binding var currentSong: Song?
   
     @State private var editingTitle: Bool = false
     @State private var editingStage: Bool = false
@@ -80,7 +80,7 @@ struct songView: View {
     
     
     // function that removes the current song from the database
-      private func deleteSong(songToRemove: song) -> Bool {
+      private func deleteSong(songToRemove: Song) -> Bool {
           withAnimation {
               modelContext.delete(songToRemove)
               return true
@@ -680,7 +680,7 @@ struct songView: View {
 struct songView_Previews: PreviewProvider {
     static var previews: some View {
         // Make the sample song optional
-        let sampleSong: song? = song(title: "Good Morning", filePath: "asdfasdf", tempo: 120, genre: "Rap", key: "F# Minor", starRating: 3, notes: "A great song", stage: "Completed",bookmarkData: nil)
+        let sampleSong: Song? = Song(title: "Good Morning", filePath: "asdfasdf", tempo: 120, genre: "Rap", key: "F# Minor", starRating: 3, notes: "A great song", stage: "Completed",bookmarkData: nil)
              
              // Create a constant binding to an optional song
              let songBinding = Binding.constant(sampleSong)

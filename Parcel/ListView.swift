@@ -32,12 +32,12 @@ struct addButton: View {
 // information in row
 struct SubsectionView: View {
     @State private var isExpanded: Bool = true
-    @State private var selectedSong: song?
+    @State private var selectedSong: Song?
     @State private var showingSongView = false
     
     let songCount: Int
     let title: String
-    let songs: [song]
+    let songs: [Song]
 
    
     var body: some View {
@@ -118,7 +118,9 @@ struct SubsectionView: View {
 struct MainView : View {
     @State private var headerMessage: String = ""
     @State private var showingAddSongForm = false
-    @Query private var songs: [song] // where songs are stored
+    @Query private var songs: [Song] // where songs are stored
+    @Query var projects: [Project]
+   
     
     var body: some View {
         ZStack{
@@ -128,7 +130,7 @@ struct MainView : View {
                     .resizable()
                     .scaledToFill()
                     .edgesIgnoringSafeArea(.all)
-                    .opacity(0.3)
+                    .opacity(1)
                     .frame(width: geometry.size.width, height: geometry.size.height)
                     .blur(radius: 1.5)
                     .clipped()
@@ -374,8 +376,9 @@ struct MainView : View {
             }
             
         }
-        
+        //.foregroundColor(.black)
     }
+       
     
     func updateHeaderMessage() {
            let currentTime = Date()
@@ -401,7 +404,7 @@ struct ListView: View {
         VStack {
             //..
             
-            Text("Chord Craft").font(.largeTitle).fontWeight(.semibold).padding(.top, 28).padding(.leading, -10)
+            Text("Parcel").font(.largeTitle).fontWeight(.semibold).padding(.top, 28).padding(.leading, -70)
             //Divider()
             ForEach(options.indices, id: \.self) { index in    // Display each option in a row
                 let option = options[index]     // Gets the currently selected option

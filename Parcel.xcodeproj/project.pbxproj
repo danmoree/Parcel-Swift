@@ -68,6 +68,7 @@
 		653A5C0F2BED80D50000F166 /* Parcel */ = {
 			isa = PBXGroup;
 			children = (
+				655EB7852BF431A700615871 /* Models */,
 				653A5C292BED834A0000F166 /* StartUpPage.swift */,
 				653A5C102BED80D50000F166 /* ParcelApp.swift */,
 				653A5C122BED80D50000F166 /* ContentView.swift */,
@@ -75,12 +76,9 @@
 				653A5C142BED80D60000F166 /* Assets.xcassets */,
 				653A5C192BED80D60000F166 /* Parcel.entitlements */,
 				653A5C212BED819B0000F166 /* AddSongForm.swift */,
-				653A5C232BED82510000F166 /* Project.swift */,
-				653A5C252BED827C0000F166 /* Song.swift */,
 				653A5C272BED83210000F166 /* ListView.swift */,
-				653A5C162BED80D60000F166 /* Preview Content */,
 				653A5C2B2BED83750000F166 /* SongView.swift */,
-				653A5C2D2BED83B90000F166 /* Item.swift */,
+				653A5C162BED80D60000F166 /* Preview Content */,
 			);
 			path = Parcel;
 			sourceTree = "<group>";
@@ -91,6 +89,16 @@
 				653A5C172BED80D60000F166 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		655EB7852BF431A700615871 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				653A5C252BED827C0000F166 /* Song.swift */,
+				653A5C232BED82510000F166 /* Project.swift */,
+				653A5C2D2BED83B90000F166 /* Item.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -302,6 +310,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Parcel/Parcel.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -312,6 +321,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -330,6 +340,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Parcel/Parcel.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -340,6 +351,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

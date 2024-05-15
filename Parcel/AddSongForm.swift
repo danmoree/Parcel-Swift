@@ -61,7 +61,7 @@ struct myRoundedTextFieldStyle2: TextFieldStyle {
 struct AddsongForm: View {
     @Binding var showingAddSongForm: Bool
     @Environment(\.modelContext) public var modelContext // where songs are getting stored
-    @Query private var songs: [song] // where songs are stored
+    @Query private var songs: [Song] // where songs are stored
     
     // variables to store input
     @State private var buttonText = "Add"
@@ -370,7 +370,7 @@ struct AddsongForm: View {
     private func addItem() -> Bool {
         withAnimation {
             if let tempoin = Double(songtempo), let rating = Double(startrate) {
-                let newItem = song(title: songName, filePath: selectedFilePath!, tempo: tempoin, genre: songG, key: songkey, starRating: rating, notes: notesInput, stage:  stagein, bookmarkData: bookmarkDataa)
+                let newItem = Song(title: songName, filePath: selectedFilePath!, tempo: tempoin, genre: songG, key: songkey, starRating: rating, notes: notesInput, stage:  stagein, bookmarkData: bookmarkDataa)
                 modelContext.insert(newItem)
                 return true
             } else {

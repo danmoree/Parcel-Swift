@@ -9,145 +9,154 @@
 
 import SwiftUI
 import SwiftData
-struct StartUpPage: View {  // start main
-    // variables
-    // content
+
+struct StartUpPage: View {
+    // Variables
     @State private var showProjects = false
     @State private var currentSelection = 0
-    @Query private var Projects: [Project] // where songs are projects
-
+    //@Query private var projects: [Project] // Changed Projects to projects to follow Swift naming conventions
+    @State private var projects: [Project]
     
-    var body: some View {  // start body
-       // ProjectView(showProjects: $showProjects)
-        // .frame(minWidth: 600, minHeight: 400)
-        
-        NavigationView{ // start navigation view
-                
-                var options: [Option] {
-                    [
-                        Option(title: "Settings", imageName: "gearshape") // Keep the "Settings" option
-                    ] + Projects.map { project in
-                        Option(title: project.projectName, imageName: "folder.fill")
-                    }
-                }
-                if showProjects {
-                    ListView(options:options, currentSelection: $currentSelection)
-                    MainView()
-                } else {
-                    SideView(showProjects: $showProjects)
-                    ProjectView(showProjects: $showProjects)
-                }
-                
-            
-        } // end naviagtion
-         
-       // .frame(minWidth: 600, minHeight: 400)
-    } // end body
-} // end main
+    init() {
+           // Initialize with hardcoded projects for testing
+           let dateFormatter = DateFormatter()
+           dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+           let dateString = dateFormatter.string(from: Date())
 
-struct SideView: View {  // start struct
+           let project1 = Project(projectName: "Project 1")
+           let project2 = Project(projectName: "Project 2")
+           let project3 = Project(projectName: "Project 3")
+
+           _projects = State(initialValue: [project1, project2, project3])
+       }
+    var body: some View {
+        NavigationView {
+            if showProjects {
+                // Pass the projects to ListView
+                ListView(options: options, currentSelection: $currentSelection)
+                MainView()
+            } else {
+                // Pass the projects to SideView
+                SideView(showProjects: $showProjects, projects: projects)
+                ProjectView(showProjects: $showProjects)
+            }
+        }
+    }
+    
+    // Options for ListView
+    var options: [Option] {
+        [
+            Option(title: "Settings", imageName: "gearshape") // Keep the "Settings" option
+        ] + projects.map { project in
+            Option(title: project.projectName, imageName: "folder.fill")
+        }
+    }
+}
+
+struct SideView: View {
     @Binding var showProjects: Bool
+    let projects: [Project] // Accept projects as a parameter
+    
     var body: some View {
         ZStack {
             VStack(spacing: 20) {
                 Button(action: {
                     showProjects.toggle()
-                    }, label: {
+                }, label: {
+                    HStack {
+                        Text("Recent Project").foregroundColor(.black).fontWeight(.semibold)
+                        Image(systemName: "book.pages.fill").foregroundColor(.black)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: 50)
+                    .cornerRadius(100)
+                })
+                
+                // Display list of projects
+                ForEach(projects, id: \.self) { project in
+                    Button(action: {
+                        // Handle project selection
+                    }) {
                         HStack {
-                            Text("Recent Project").foregroundColor(.black).fontWeight(.semibold)
-                            Image(systemName: "book.pages.fill").foregroundColor(.black)
+                            Text(project.projectName).foregroundColor(.black)
+                            Image(systemName: "folder.fill").foregroundColor(.black)
                         }
-                        .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: 50)
+                        .frame(maxWidth: .infinity, maxHeight: 50)
                         .cornerRadius(100)
-                    })
+                    }
+                }
+                
                 Spacer()
             }
             .padding()
-            .background(Color.white).ignoresSafeArea(edges: /*@START_MENU_TOKEN@*/.bottom/*@END_MENU_TOKEN@*/)
+            .background(Color.white).ignoresSafeArea(edges: .bottom)
         }
-    }  // end body
-}  // end struct
+    }
+}
 
-
-struct ProjectView: View {  // start struct
+struct ProjectView: View {
     @Binding var showProjects: Bool
     
     var body: some View {
-        ZStack { // start v stack
-             
-            
+        ZStack {
             HStack {
                 VStack {
                     Spacer()
                     Image("ChordCraft1")
                         .resizable()
-                             .aspectRatio(contentMode: .fit)
-                             .frame(width: 250, height: 130, alignment: .centerLastTextBaseline)
-                             //.border(.blue)
-                             .padding(.top, 44)
-                  
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 250, height: 130, alignment: .centerLastTextBaseline)
+                        .padding(.top, 44)
                     
-                    
-                    Text("Chord Craft")
+                    Text("Parcel")
                         .font(.largeTitle)
                         .fontWeight(.bold)
                     
                     Text("Version 1.0.0")
-                        .font(/*@START_MENU_TOKEN@*/.subheadline/*@END_MENU_TOKEN@*/)
+                        .font(.subheadline)
                         .fontWeight(.medium)
                         .foregroundStyle(.gray)
                     
                     Spacer()
                     
                     Button {
-                           
-                       } label: {
-                           Image(systemName: "plus.square")
-                           Text("Create New Project...")
-                               .padding(.leading, -89)
-                               .padding(.vertical, 8)
-                               .frame(maxWidth: 250)
-                               .cornerRadius(8)
-                       }// end button
-                       .frame(minWidth: 280,maxWidth: 280)
-                       .padding(.bottom, 4)
-                    
+                        // Handle create new project action
+                    } label: {
+                        Image(systemName: "plus.square")
+                        Text("Create New Project...")
+                            .padding(.leading, -89)
+                            .padding(.vertical, 8)
+                            .frame(maxWidth: 250)
+                            .cornerRadius(8)
+                    }
+                    .frame(minWidth: 280, maxWidth: 280)
+                    .padding(.bottom, 4)
                     
                     Button {
                         showProjects.toggle()
-                       } label: {
-                           HStack {
-                               Image(systemName: "folder")
-                               Spacer()
-                               Text("Open Existing Project...")
-                                   .padding(.leading, -89)
-                                   .padding(.vertical, 8)
-                                   .frame(maxWidth: 250)
-                                   .cornerRadius(8)
-                                   //.border(.blue)
-                           }
-                          
-                               
-                       }// end of button
-                       .frame(minWidth: 280,maxWidth: 280)
-                       //.border(.blue)
-                    
-                } // end of v stack
+                    } label: {
+                        HStack {
+                            Image(systemName: "folder")
+                            Spacer()
+                            Text("Open Existing Project...")
+                                .padding(.leading, -89)
+                                .padding(.vertical, 8)
+                                .frame(maxWidth: 250)
+                                .cornerRadius(8)
+                        }
+                    }
+                    .frame(minWidth: 280, maxWidth: 280)
+                }
                 .padding(.bottom, 70)
-                
-            } // end of hstack
+            }
             .padding(.leading, 100)
             .padding(.trailing, 100)
-
-        } // end of zstack
-    }  // end body
-        
-}  // end struct
+        }
+    }
+}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         StartUpPage()
-            //.frame(width: 600, height: 500)
     }
-        
 }
+
