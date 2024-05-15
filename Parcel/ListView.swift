@@ -118,8 +118,9 @@ struct SubsectionView: View {
 struct MainView : View {
     @State private var headerMessage: String = ""
     @State private var showingAddSongForm = false
-    @Query private var songs: [Song] // where songs are stored
-    @Query var projects: [Project]
+    @Query private var songs: [Song] // where songs are
+    @Binding var project: Project?
+    
    
     
     var body: some View {
@@ -152,30 +153,33 @@ struct MainView : View {
                         .onAppear(perform: updateHeaderMessage) // calls function
                         Spacer()
                         Spacer()
-                            HStack {
-                                // Project title
-                                Text("Midnights").font(.title).fontWeight(.medium).padding(.leading)
-                                Spacer()
-                                addButton(action: {
-                                    // Your action code here, for example:
-                                    print("Button tapped")
-                                    showingAddSongForm = true
-                                    
-                                })
-                                .padding(.bottom,-20)
-                            } // end of hstack
-                            .sheet(isPresented: $showingAddSongForm) {
-                      AddsongForm(showingAddSongForm: $showingAddSongForm)
-                                    .frame(width: 800, height: 700)
-                    }
-                           
-                    
-                            HStack {
-                            // project by
-                            Text("Taylor Swift").font(.headline).fontWeight(.thin)
-                                             .padding(.leading, 17.0)
+                    if let project = project {
+                        HStack {
+                            // Project title
+                            Text(project.projectName).font(.title).fontWeight(.medium).padding(.leading)
                             Spacer()
-                            }
+                            addButton(action: {
+                                // Your action code here, for example:
+                                print("Button tapped")
+                                showingAddSongForm = true
+                                
+                            })
+                            .padding(.bottom,-20)
+                        } // end of hstack
+                        
+                        .sheet(isPresented: $showingAddSongForm) {
+                            AddsongForm(showingAddSongForm: $showingAddSongForm)
+                                .frame(width: 800, height: 700)
+                        }
+                        
+                        
+                        HStack {
+                            // project by
+                            Text(project.artistName).font(.headline).fontWeight(.thin)
+                                .padding(.leading, 17.0)
+                            Spacer()
+                        }
+                    }
                     /*
                     Divider().frame(height: 2).foregroundColor(Color.white)
                     */
@@ -432,8 +436,9 @@ struct ListView: View {
 }
 
 struct MainView_Previews: PreviewProvider {
+    @State static var sampleProject: Project? = Project(projectName: "Sample Project") // Create an optional sample project
     static var previews: some View {
-        MainView()
+        MainView(project: $sampleProject)
             .frame(width: 900, height: 600)  // Specifies the frame size for the view
                        .previewLayout(.sizeThatFits)
     }

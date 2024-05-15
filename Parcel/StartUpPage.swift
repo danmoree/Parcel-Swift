@@ -16,16 +16,17 @@ struct StartUpPage: View {
     @State private var currentSelection = 0
     //@Query private var projects: [Project] // Changed Projects to projects to follow Swift naming conventions
     @State private var projects: [Project]
+    @State private var selectedProject: Project? // keep track of selected project
     
     init() {
            // Initialize with hardcoded projects for testing
-           let dateFormatter = DateFormatter()
-           dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-           let dateString = dateFormatter.string(from: Date())
-
+          
            let project1 = Project(projectName: "Project 1")
+           project1.artistName = "Kanye West"
            let project2 = Project(projectName: "Project 2")
+           project2.artistName = "Taylor Swift"
            let project3 = Project(projectName: "Project 3")
+        project3.artistName = "Daniel Moreno"
 
            _projects = State(initialValue: [project1, project2, project3])
        }
@@ -34,10 +35,13 @@ struct StartUpPage: View {
             if showProjects {
                 // Pass the projects to ListView
                 ListView(options: options, currentSelection: $currentSelection)
-                MainView()
+             
+                    MainView(project: $selectedProject)
+                
+                
             } else {
                 // Pass the projects to SideView
-                SideView(showProjects: $showProjects, projects: projects)
+                SideView(showProjects: $showProjects, projects: projects, selectedProject: $selectedProject)
                 ProjectView(showProjects: $showProjects)
             }
         }
@@ -47,15 +51,17 @@ struct StartUpPage: View {
     var options: [Option] {
         [
             Option(title: "Settings", imageName: "gearshape") // Keep the "Settings" option
-        ] + projects.map { project in
-            Option(title: project.projectName, imageName: "folder.fill")
-        }
+        ] 
+    //    + projects.map { project in
+    //        Option(title: project.projectName, imageName: "folder.fill")
+    //    }
     }
 }
 
 struct SideView: View {
     @Binding var showProjects: Bool
-    let projects: [Project] // Accept projects as a parameter
+    let projects: [Project]
+    @Binding var selectedProject: Project?
     
     var body: some View {
         ZStack {
@@ -74,7 +80,8 @@ struct SideView: View {
                 // Display list of projects
                 ForEach(projects, id: \.self) { project in
                     Button(action: {
-                        // Handle project selection
+                        selectedProject = project
+                        showProjects.toggle()
                     }) {
                         HStack {
                             Text(project.projectName).foregroundColor(.black)
