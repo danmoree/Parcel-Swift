@@ -19,17 +19,29 @@ struct StartUpPage: View {
     @State private var selectedProject: Project? // keep track of selected project
     
     init() {
-           // Initialize with hardcoded projects for testing
-          
-           let project1 = Project(projectName: "Project 1")
-           project1.artistName = "Kanye West"
-           let project2 = Project(projectName: "Project 2")
-           project2.artistName = "Taylor Swift"
-           let project3 = Project(projectName: "Project 3")
+        // Initialize with hardcoded projects for testing
+        let project1 = Project(projectName: "Project 1")
+        project1.artistName = "Kanye West"
+        
+        let project2 = Project(projectName: "Project 2")
+        project2.artistName = "Taylor Swift"
+        
+        let project3 = Project(projectName: "Project 3")
         project3.artistName = "Daniel Moreno"
+        
+        // Create songs
+        let song1 = Song(title: "Song 1", filePath: "/path/to/song1", tempo: 120, genre: "Pop", key: "C", starRating: 4.5, notes: "Great song!", stage: "Completed")
+        let song2 = Song(title: "Song 2", filePath: "/path/to/song2", tempo: 130, genre: "Rock", key: "G", starRating: 4.0, notes: "Needs more work", stage: "Mixing")
+        let song3 = Song(title: "Song 3", filePath: "/path/to/song3", tempo: 110, genre: "Jazz", key: "F", starRating: 5.0, notes: "Almost done", stage: "Mastering")
+        
+        // Add songs to projects
+     //   project1.addSong(song1)
+     //   project2.addSong(song2)
+     //   project3.addSong(song3)
+        
+        _projects = State(initialValue: [project1, project2, project3])
+    }
 
-           _projects = State(initialValue: [project1, project2, project3])
-       }
     var body: some View {
         NavigationView {
             if showProjects {
