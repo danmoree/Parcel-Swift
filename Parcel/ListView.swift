@@ -174,7 +174,7 @@ struct MainView : View {
                         } // end of hstack
                         
                         .sheet(isPresented: $showingAddSongForm) {
-                            AddsongForm(showingAddSongForm: $showingAddSongForm)
+                            AddsongForm(showingAddSongForm: $showingAddSongForm, selectedProject: $project)
                                 .frame(width: 800, height: 700)
                         }
                         

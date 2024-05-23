@@ -60,8 +60,9 @@ struct myRoundedTextFieldStyle2: TextFieldStyle {
 
 struct AddsongForm: View {
     @Binding var showingAddSongForm: Bool
-    @Environment(\.modelContext) public var modelContext // where songs are getting stored
+    @EnvironmentObject var viewModel: ProjectViewModel
     @Query private var songs: [Song] // where songs are stored
+    @Binding var selectedProject: Project?
     
     // variables to store input
     @State private var buttonText = "Add"
@@ -306,59 +307,7 @@ struct AddsongForm: View {
             .padding(.bottom, 30)
             
             
-            // Dropdown menu for stage selection
-            // Segmented control for stage selection
-            //      Picker(selection: $stagein, label: Text("Stage of Production")) {
-            //          ForEach(stageOptions, id: \.self) { option in
-            //              Text(option)
-            //          }
-            //      }
-            //      .pickerStyle(SegmentedPickerStyle()) // Apply segmented control style
-            //
-            
-            // end of selector
-            //     Button(action: {
-            //         openFileSelectionDialog()
-            //     }) {
-            //         Text("Select File")
-            //             .padding()
-            //             .foregroundColor(.white)
-            //             .background(Color.blue)
-            //             .cornerRadius(10)
-            //     }
-            //     Button(action: {
-            //         if addItem() {
-            //             self.buttonText = "Song added"
-            //         } else {
-            //             self.buttonText = "Invalid, try again"
-            //         }
-            //     }) {
-            //         Text(buttonText)
-            //             .padding()
-            //             .foregroundColor(.white)
-            //             .background(Color.blue)
-            //             .cornerRadius(10)
-            //     }
-            
-            //     Text("List of Songs Stored")
-            //         .font(.headline)
-            
-            //     List(songs) { item in
-            //         VStack(alignment: .leading) {
-            //             Text(item.title)
-            //             Text("Genre: \(item.genre)")
-            //             Text("date: \(item.dateCreated)")
-            //             Text("tempo: \(item.tempo)")
-            //             Text("rating: \(item.starRating)")
-            //             Text("key: \(item.key)")
-            //             Text("notes: \(item.notes)")
-            //             Text("Path to file: \(item.filePath)")
-            //             Text("Stage of production: \(item.stage)")
-            
-            //                 .foregroundColor(.gray)
-            //         }
-            
-            // }
+         
         } // end of v stack
         .padding()
         .buttonStyle(PlainButtonStyle())
@@ -368,16 +317,17 @@ struct AddsongForm: View {
     
     
     private func addItem() -> Bool {
-        withAnimation {
-            if let tempoin = Double(songtempo), let rating = Double(startrate) {
-                let newItem = Song(title: songName, filePath: selectedFilePath!, tempo: tempoin, genre: songG, key: songkey, starRating: rating, notes: notesInput, stage:  stagein, bookmarkData: bookmarkDataa)
-                modelContext.insert(newItem)
-                return true
-            } else {
-                return false // Return false if conversion fails
+        guard let selectedProject = selectedProject else { return false }
+        if let tempoin = Double(songtempo), let rating = Double(startrate) {
+            let newItem = Song(title: songName, filePath: selectedFilePath ?? "", tempo: tempoin, genre: songG, key: songkey, starRating: rating, notes: notesInput, stage: stagein, bookmarkData: bookmarkDataa)
+            withAnimation {
+                viewModel.addSongToProject(project: selectedProject, song: newItem)
             }
+            return true
+        } else {
+            return false
         }
-    } // end of add item function
+    }
     
     func openFileSelectionDialog() {
         let openPanel = NSOpenPanel()
@@ -408,11 +358,14 @@ struct AddsongForm: View {
 
 struct AddsongForm_Previews: PreviewProvider {
     static var previews: some View {
-        AddsongForm(showingAddSongForm: .constant(true))
-            .frame(width: 700, height: 800)  // Specifies the frame size for the view
-                       .previewLayout(.sizeThatFits)
-         //   .modelContainer(for: Item.self, inMemory: false)    // comented out to fix preview and make it visible
-            // Provide any required environment objects or settings here
-    }
+           AddsongForm(showingAddSongForm: .constant(true), selectedProject: .constant(Project(projectName: "Sample Project")))
+               .frame(width: 700, height: 800)
+               .previewLayout(.sizeThatFits)
+               .environmentObject(ProjectViewModel(modelContainer: {
+                   let schema = Schema([Song.self, Project.self])
+                   let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+                   return try! ModelContainer(for: schema, configurations: [configuration])
+               }()))
+       }
 }
 

@@ -17,6 +17,8 @@ struct StartUpPage: View {
     //@Query private var projects: [Project] // Changed Projects to projects to follow Swift naming conventions
     @State private var projects: [Project]
     @State private var selectedProject: Project? // keep track of selected project
+    @EnvironmentObject var viewModel: ProjectViewModel
+    @State private var showingAddProjectForm = false
     
     init() {
         // Initialize with hardcoded projects for testing
@@ -45,16 +47,16 @@ struct StartUpPage: View {
     var body: some View {
         NavigationView {
             if showProjects {
-                // Pass the projects to ListView
-                ListView(options: options, currentSelection: $currentSelection)
-             
-                    MainView(project: $selectedProject)
-                
-                
+                          // Pass the projects to ListView
+                          ListView(options: options, currentSelection: $currentSelection)
+                          MainView(project: $selectedProject)
             } else {
                 // Pass the projects to SideView
                 SideView(showProjects: $showProjects, projects: projects, selectedProject: $selectedProject)
-                ProjectView(showProjects: $showProjects)
+                ProjectView(showProjects: $showProjects, showingAddProjectForm: $showingAddProjectForm)
+                    .sheet(isPresented: $showingAddProjectForm) {
+                        AddProjectForm()
+                    }
             }
         }
     }
@@ -74,6 +76,7 @@ struct SideView: View {
     @Binding var showProjects: Bool
     let projects: [Project]
     @Binding var selectedProject: Project?
+    @EnvironmentObject var viewModel: ProjectViewModel
     
     var body: some View {
         ZStack {
@@ -90,7 +93,7 @@ struct SideView: View {
                 })
                 
                 // Display list of projects
-                ForEach(projects, id: \.self) { project in
+                ForEach(viewModel.projects) { project in
                     Button(action: {
                         selectedProject = project
                         showProjects.toggle()
@@ -114,7 +117,7 @@ struct SideView: View {
 
 struct ProjectView: View {
     @Binding var showProjects: Bool
-    
+    @Binding var showingAddProjectForm: Bool
     var body: some View {
         ZStack {
             HStack {
@@ -138,7 +141,7 @@ struct ProjectView: View {
                     Spacer()
                     
                     Button {
-                        // Handle create new project action
+                        showingAddProjectForm = true
                     } label: {
                         Image(systemName: "plus.square")
                         Text("Create New Project...")
@@ -175,7 +178,21 @@ struct ProjectView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        StartUpPage()
+        let schema = Schema([
+            Song.self, Project.self
+        ])
+
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+
+        let modelContainer: ModelContainer
+        do {
+            modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("Could not create ModelContainer: \(error)")
+        }
+
+        return StartUpPage()
+            .environmentObject(ProjectViewModel(modelContainer: modelContainer))
     }
 }
 
