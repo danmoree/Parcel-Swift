@@ -118,10 +118,10 @@ struct SubsectionView: View {
 struct MainView : View {
     @State private var headerMessage: String = ""
     @State private var showingAddSongForm = false
-   // @Query private var songs: [Song] // where songs are
     @Binding var project: Project?
+    @EnvironmentObject var viewModel: ProjectViewModel
     
-    
+    // grabs the songs from the project
     var songs: [Song] {
          return project?.songs ?? []
      }

@@ -6,9 +6,6 @@
 //
 
 
-// actual variables
-// for rating, we should have 5 images?
-
 import SwiftUI
 import AppKit
 
@@ -35,8 +32,9 @@ struct songView: View {
     @State private var songNotesText: String = ""
 
     @State private var confirmDelete = false
+    
     @Environment(\.modelContext) public var modelContext // where songs are getting stored
-
+    @EnvironmentObject var viewModel: ProjectViewModel
     
     
     @State private var isHoveringTitle: Bool = false
@@ -80,13 +78,14 @@ struct songView: View {
     
     
     // function that removes the current song from the database
-      private func deleteSong(songToRemove: Song) -> Bool {
-          withAnimation {
-              modelContext.delete(songToRemove)
-              return true
-          }
-          return false // Return false if conversion fails
-      }
+    private func deleteSong(songToRemove: Song) {
+            for project in viewModel.projects {
+                if project.songs.contains(where: { $0.id == songToRemove.id }) {
+                    viewModel.removeSong(from: project, song: songToRemove)
+                    break
+                }
+            }
+        }
     
     
     var body: some View {
@@ -652,16 +651,18 @@ struct songView: View {
                         Button(action: {
                             confirmDelete = true
                                 }) {
-                            Text("Delete Folder").foregroundColor(.red).frame(width: 120, height: 30)
+                            Text("Remove Song").foregroundColor(.red).frame(width: 120, height: 30)
                             }
                             .alert(isPresented: $confirmDelete) {
                             Alert(
-                                title: Text("Are you sure you want to delete this folder?"),
+                                title: Text("Are you sure you want to remove this song?"),
                                 message: Text("This action cannot be undone."),
                                 primaryButton: .destructive(Text("Yes")) {
-                                    if deleteSong(songToRemove: currentSong! ) {
-                                        print("song is gone ")
-                                    }
+                                    if let song = currentSong {
+                                                   deleteSong(songToRemove: song)
+                                                   print("Song Was Removed!")
+                                                   self.showingSongView = false
+                                               }
                                     },
                                     secondaryButton: .cancel(Text("No"))
                                 )

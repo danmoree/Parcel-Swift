@@ -51,4 +51,14 @@ class ProjectViewModel: ObservableObject {
               print("Failed to save the song: \(error)")
           }
       }
+    
+    func removeSong(from project: Project, song: Song) {
+            project.songs.removeAll { $0.id == song.id }
+            modelContainer.mainContext.delete(song)
+            do {
+                try modelContainer.mainContext.save()
+            } catch {
+                print("Failed to remove song from project: \(error)")
+            }
+        }
 }
