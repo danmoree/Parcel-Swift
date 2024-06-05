@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  Parcel
 //
-//  Created by Daniel Moreno on 5/9/24.
+//  Controls the navigation view?
 //
 
 import SwiftUI
@@ -24,7 +24,7 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             // Display the list of options
-            ListView(options: options, currentSelection: $currentOption)
+            Sidebar(options: options, currentSelection: $currentOption)
             if let view = views[currentOption] {        // Display the view to the current selection
                 view
                 }

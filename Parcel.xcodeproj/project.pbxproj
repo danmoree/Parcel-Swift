@@ -15,7 +15,7 @@
 		653A5C222BED819B0000F166 /* AddSongForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A5C212BED819B0000F166 /* AddSongForm.swift */; };
 		653A5C242BED82510000F166 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A5C232BED82510000F166 /* Project.swift */; };
 		653A5C262BED827C0000F166 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A5C252BED827C0000F166 /* Song.swift */; };
-		653A5C282BED83210000F166 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A5C272BED83210000F166 /* ListView.swift */; };
+		653A5C282BED83210000F166 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A5C272BED83210000F166 /* DashboardView.swift */; };
 		653A5C2A2BED834A0000F166 /* StartUpPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A5C292BED834A0000F166 /* StartUpPage.swift */; };
 		653A5C2C2BED83750000F166 /* SongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A5C2B2BED83750000F166 /* SongView.swift */; };
 		653A5C2E2BED83B90000F166 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A5C2D2BED83B90000F166 /* Item.swift */; };
@@ -33,7 +33,7 @@
 		653A5C212BED819B0000F166 /* AddSongForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSongForm.swift; sourceTree = "<group>"; };
 		653A5C232BED82510000F166 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		653A5C252BED827C0000F166 /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
-		653A5C272BED83210000F166 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
+		653A5C272BED83210000F166 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		653A5C292BED834A0000F166 /* StartUpPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartUpPage.swift; sourceTree = "<group>"; };
 		653A5C2B2BED83750000F166 /* SongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongView.swift; sourceTree = "<group>"; };
 		653A5C2D2BED83B90000F166 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
@@ -77,11 +77,11 @@
 				653A5C102BED80D50000F166 /* ParcelApp.swift */,
 				653A5C122BED80D50000F166 /* ContentView.swift */,
 				653A5C1F2BED816B0000F166 /* AddProjectForm.swift */,
-				653A5C142BED80D60000F166 /* Assets.xcassets */,
-				653A5C192BED80D60000F166 /* Parcel.entitlements */,
 				653A5C212BED819B0000F166 /* AddSongForm.swift */,
-				653A5C272BED83210000F166 /* ListView.swift */,
+				653A5C272BED83210000F166 /* DashboardView.swift */,
 				653A5C2B2BED83750000F166 /* SongView.swift */,
+				653A5C192BED80D60000F166 /* Parcel.entitlements */,
+				653A5C142BED80D60000F166 /* Assets.xcassets */,
 			);
 			path = Parcel;
 			sourceTree = "<group>";
@@ -179,7 +179,7 @@
 				653A5C262BED827C0000F166 /* Song.swift in Sources */,
 				653A5C222BED819B0000F166 /* AddSongForm.swift in Sources */,
 				653A5C132BED80D50000F166 /* ContentView.swift in Sources */,
-				653A5C282BED83210000F166 /* ListView.swift in Sources */,
+				653A5C282BED83210000F166 /* DashboardView.swift in Sources */,
 				653A5C2A2BED834A0000F166 /* StartUpPage.swift in Sources */,
 				653A5C202BED816B0000F166 /* AddProjectForm.swift in Sources */,
 				653A5C242BED82510000F166 /* Project.swift in Sources */,

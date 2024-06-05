@@ -1,17 +1,29 @@
+//
+// AddProjectForm.swift
+// Parcel
+//
+//  View to create new project
+//
 import SwiftUI
 import SwiftData
 
 struct AddProjectForm: View {
-    @EnvironmentObject var viewModel: ProjectViewModel
+    
     @State private var projectName: String = ""
     @State private var artistName: String = ""
     @State private var buttonText = "Create Project"
+    
+    @EnvironmentObject var viewModel: ProjectViewModel
+    
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
         VStack(spacing: 20) {
             HStack {
+                
                 Spacer()
+                
+                // Close/dismiss button
                 Button(action: {
                     presentationMode.wrappedValue.dismiss()
                 }) {
@@ -84,6 +96,7 @@ struct AddProjectForm: View {
         }
     }
 
+    // Style for the custom text field style
     struct myRoundedTextFieldStyle: TextFieldStyle {
         func _body(configuration: TextField<Self._Label>) -> some View {
             configuration

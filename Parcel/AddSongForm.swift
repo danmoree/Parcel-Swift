@@ -1,68 +1,21 @@
 //
 //  AddsongForm.swift
-//  ChordCraft
+//  Parcel
 //
-//
-import Cocoa
+//  View to add a new song to project
 import SwiftData
 import SwiftUI
 
 
-struct DropdownMenuView: View {
-    @Binding var selectedOption: String
-    let options = ["Completed", "Mastering", "Mixing", "Arranging", "Ideas"]
-    let initialText: String = "Select an Option"
 
-    var body: some View {
-        Menu {
-            ForEach(options, id: \.self) { option in
-                Button(option, action: {
-                    selectedOption = option
-                })
-            }
-        } label: {
-            Label(selectedOption == "" ? initialText : selectedOption, systemImage: "chevron.down")
-                .padding(.horizontal, 60)
-                .padding(.top, 7)
-                .padding(.bottom, 7)
-                .background(.gray)
-                .opacity(0.3)
-                .cornerRadius(15)
-                
-        }
-        
-    }
-}
-
-struct myRoundedTextFieldStyle: TextFieldStyle {
-    func _body(configuration: TextField<Self._Label>) -> some View {
-        configuration
-            .padding(5)
-            .background(.gray)
-            .cornerRadius(9)
-            .opacity(0.3)
-            
-            
-    }
-}
-
-struct myRoundedTextFieldStyle2: TextFieldStyle {
-    func _body(configuration: TextField<Self._Label>) -> some View {
-        configuration
-            .padding(50)
-            .background(.gray)
-            .cornerRadius(15)
-            .opacity(0.3)
-            
-            
-    }
-}
-
+// PRE: 1) showingAddSongForm - open/dismiss the sheet
+//      2) selectedProject - project object to add song to
+// POST: A view to build a song object with its own attributes
 struct AddsongForm: View {
     @Binding var showingAddSongForm: Bool
-    @EnvironmentObject var viewModel: ProjectViewModel
-    @Query private var songs: [Song] // where songs are stored
     @Binding var selectedProject: Project?
+    
+    @EnvironmentObject var viewModel: ProjectViewModel
     
     // variables to store input
     @State private var buttonText = "Add"
@@ -75,11 +28,7 @@ struct AddsongForm: View {
     @State var stagein: String = ""
     @State private var bookmarkDataa: Data? = nil
     
-    
-    // var for file path
     @State private var selectedFilePath: String?
-    
-    // let stageOptions = ["Completed", "Mastering", "Mixing","Arranging", "Ideas"]
     
     
     var body: some View {
@@ -87,15 +36,14 @@ struct AddsongForm: View {
             HStack {
                 
                 Spacer()
+                
                 Button(action: {
-                    // Define the action you want the button to perform here
                     print("Button was tapped")
                     self.showingAddSongForm = false
                 }) {
                     Image(systemName: "xmark.circle.fill")
-                        .font(.title) // Optional: Adjust the size of the image
-                        .foregroundColor(.gray) // Optional: Change the color of the image
-                    
+                        .font(.title)
+                        .foregroundColor(.gray)
                 }
             }
             
@@ -113,9 +61,6 @@ struct AddsongForm: View {
             .padding(.leading, 40)
             
             HStack {
-                // RoundedRectangle(cornerRadius: 15, style: .continuous)
-                //     .frame(height: 3)
-                // .opacity(0.4)
                 Spacer()
             }
             HStack {
@@ -132,12 +77,8 @@ struct AddsongForm: View {
                         }
                         TextField("Song Name", text: $songName)
                             .textFieldStyle(myRoundedTextFieldStyle())
-                        
-                        
                     }
                     .padding(.bottom, 20)
-                    
-                    
                     
                     VStack {
                         HStack {
@@ -152,17 +93,16 @@ struct AddsongForm: View {
                     }
                     .padding(.bottom, 20)
                     
-                    
-                    
                     VStack {
                         HStack {
                             Text("Tempo")
                                 .font(.title2)
                                 .fontWeight(.medium)
+                            
                             Spacer()
                             
-                            
                         }
+                        
                         TextField("Song Tempo", text: $songtempo)
                             .textFieldStyle(myRoundedTextFieldStyle())
                     }
@@ -194,10 +134,7 @@ struct AddsongForm: View {
                     }
                     .padding(.bottom, 20)
                     
-                    
-                    
                 } // end of left side vstack
-                
                 
                 Spacer()
                 Spacer()
@@ -258,10 +195,10 @@ struct AddsongForm: View {
                                 } icon: {
                                     
                                 }
-                                .padding()  // Apply padding to the entire Label
-                                .background(Color.gray.opacity(0.4))  // Background applied to the entire Label
-                                .foregroundColor(.white)  // Foreground color applied to the entire Label
-                                .cornerRadius(10)  // Corner radius applied to the entire Label
+                                .padding()
+                                .background(Color.gray.opacity(0.4))
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
                             }
                             
                             Spacer()
@@ -270,16 +207,13 @@ struct AddsongForm: View {
                     }
                     .padding(.bottom, 20)
                     
-                    
-                    
                     Spacer()
                     Spacer()
+                    
                 } // end of right side vstack
                 .padding()
                 
                 Spacer()
-                
-                
                 
             }
             .padding(.leading, 40) // end of hstack
@@ -296,26 +230,76 @@ struct AddsongForm: View {
                     Text(buttonText)
                         .padding(.horizontal, 100)
                         .padding(.vertical)
-                        .background(Color.gray.opacity(0.4))  // Background applied to the entire Label
-                        .foregroundColor(.white)  // Foreground color applied to the entire Label
-                        .cornerRadius(10)  // Corner radius applied to the entire Label
-                    
+                        .background(Color.gray.opacity(0.4))
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
                     
                 }
                 
             }
             .padding(.bottom, 30)
             
-            
-         
         } // end of v stack
         .padding()
         .buttonStyle(PlainButtonStyle())
         
-        
     }
     
+    // Drop down for the stage box
+    struct DropdownMenuView: View {
+        @Binding var selectedOption: String
+        let options = ["Completed", "Mastering", "Mixing", "Arranging", "Ideas"]
+        let initialText: String = "Select an Option"
+        
+        var body: some View {
+            Menu {
+                ForEach(options, id: \.self) { option in
+                    Button(option, action: {
+                        selectedOption = option
+                    })
+                }
+            } label: {
+                Label(selectedOption == "" ? initialText : selectedOption, systemImage: "chevron.down")
+                    .padding(.horizontal, 60)
+                    .padding(.top, 7)
+                    .padding(.bottom, 7)
+                    .background(.gray)
+                    .opacity(0.3)
+                    .cornerRadius(15)
+                
+            }
+            
+        }
+    }
+
+    // Text field for the small boxes
+    struct myRoundedTextFieldStyle: TextFieldStyle {
+        func _body(configuration: TextField<Self._Label>) -> some View {
+            configuration
+                .padding(5)
+                .background(.gray)
+                .cornerRadius(9)
+                .opacity(0.3)
+            
+            
+        }
+    }
+
+    // Text field for notes box
+    struct myRoundedTextFieldStyle2: TextFieldStyle {
+        func _body(configuration: TextField<Self._Label>) -> some View {
+            configuration
+                .padding(50)
+                .background(.gray)
+                .cornerRadius(15)
+                .opacity(0.3)
+            
+            
+        }
+    }
+
     
+    // Add song to project
     private func addItem() -> Bool {
         guard let selectedProject = selectedProject else { return false }
         if let tempoin = Double(songtempo), let rating = Double(startrate) {
@@ -329,6 +313,7 @@ struct AddsongForm: View {
         }
     }
     
+    // Opens up finder to select the song path and saves it using a bookmark
     func openFileSelectionDialog() {
         let openPanel = NSOpenPanel()
         openPanel.allowsMultipleSelection = false
@@ -354,18 +339,16 @@ struct AddsongForm: View {
 }
 
 
-    
-
 struct AddsongForm_Previews: PreviewProvider {
     static var previews: some View {
-           AddsongForm(showingAddSongForm: .constant(true), selectedProject: .constant(Project(projectName: "Sample Project")))
-               .frame(width: 700, height: 800)
-               .previewLayout(.sizeThatFits)
-               .environmentObject(ProjectViewModel(modelContainer: {
-                   let schema = Schema([Song.self, Project.self])
-                   let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-                   return try! ModelContainer(for: schema, configurations: [configuration])
-               }()))
-       }
+        AddsongForm(showingAddSongForm: .constant(true), selectedProject: .constant(Project(projectName: "Sample Project")))
+            .frame(width: 700, height: 800)
+            .previewLayout(.sizeThatFits)
+            .environmentObject(ProjectViewModel(modelContainer: {
+                let schema = Schema([Song.self, Project.self])
+                let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+                return try! ModelContainer(for: schema, configurations: [configuration])
+            }()))
+    }
 }
 

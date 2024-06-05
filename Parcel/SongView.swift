@@ -1,18 +1,19 @@
 //
-//  songView.swift
-//  ChordCraft
+//  SongView.swift
+//  Parcel
 //
-//  Created by Shokhina Jalilova on 4/20/24.
-//
-
-
+// 
 import SwiftUI
-import AppKit
 
+
+
+// This view shows info about the clicked song
+// PRE: 1) var showingSongView, a bool that the sheet needs to either open/close this view
+//      2) var currentSong, song object to show its attributes
 struct songView: View {
     @Binding var showingSongView: Bool
     @Binding var currentSong: Song?
-  
+    
     @State private var editingTitle: Bool = false
     @State private var editingStage: Bool = false
     @State private var editingRating: Bool = false
@@ -30,10 +31,10 @@ struct songView: View {
     @State private var songTempo: Double = 0
     @State private var songTempoText: String = ""
     @State private var songNotesText: String = ""
-
+    
     @State private var confirmDelete = false
     
-    @Environment(\.modelContext) public var modelContext // where songs are getting stored
+    
     @EnvironmentObject var viewModel: ProjectViewModel
     
     
@@ -47,9 +48,10 @@ struct songView: View {
     
     @State private var showAlert = false
     
-    // for drop down menu in stage
+    // Stage options for drop down menu
     let options = ["Completed", "Mastering", "Mixing", "Arranging", "Ideas"]
     
+    // function that opens the saved file path, uses bookmark data
     func openFile(with bookmarkData: Data) {
         var isStale = false
         do {
@@ -61,7 +63,7 @@ struct songView: View {
                 print("Bookmark data is stale, needs to be refreshed.")
                 return
             }
-
+            
             // Start accessing the security-scoped resource
             if url.startAccessingSecurityScopedResource() {
                 // Open the file with the resolved URL
@@ -74,43 +76,30 @@ struct songView: View {
             print("Failed to resolve bookmark data: \(error)")
         }
     }
-
+    
     
     
     // function that removes the current song from the database
     private func deleteSong(songToRemove: Song) {
-            for project in viewModel.projects {
-                if project.songs.contains(where: { $0.id == songToRemove.id }) {
-                    viewModel.removeSong(from: project, song: songToRemove)
-                    break
-                }
+        for project in viewModel.projects {
+            if project.songs.contains(where: { $0.id == songToRemove.id }) {
+                viewModel.removeSong(from: project, song: songToRemove)
+                break
             }
         }
+    }
     
     
+    // View for the song info
     var body: some View {
-        
-        
-        
         ZStack {
-            
-       //      GeometryReader { geometry in
-       //          Image("leaf")
-       //              .resizable()
-       //              .scaledToFill()
-       //              .edgesIgnoringSafeArea(.all)
-       //              .opacity(0.3)
-       //              .frame(width: geometry.size.width, height: geometry.size.height)
-       //              .blur(radius: 1.5)
-       //              .clipped()
-       //      }
             ScrollView {
-              
+                
                 Spacer()
                 Spacer()
                 Spacer()
+                
                 ZStack {
-                    
                     VStack(spacing: 20){
                         HStack {
                             Text("Song")
@@ -118,13 +107,13 @@ struct songView: View {
                                 .fontWeight(.semibold)
                                 .padding(.leading, 1.0)
                             
-                            
+                            // play button, calls openFile func
                             Button(action: {
                                 if let bookmarkData = currentSong?.bookmarkData {
-                                        openFile(with: bookmarkData)
-                                    } else {
+                                    openFile(with: bookmarkData)
+                                } else {
                                     print("No file path available")
-                                        self.showAlert = true;
+                                    self.showAlert = true;
                                     // Optionally handle the error, e.g., show an alert
                                 }
                             }) {
@@ -132,40 +121,42 @@ struct songView: View {
                                     .font(.title)
                                     .foregroundColor(.white)
                             }
-                     //       alert(isPresented: $showAlert) {
-                     //           Alert(
-                     //               title: Text("Error"),
-                     //               message: Text("No file path available for the selected song."),
-                     //               dismissButton: .default(Text("OK"))
-                     //           )
-                     //       }
-
+                            
+                            
+                            // alert was crashing the app
+                            //       alert(isPresented: $showAlert) {
+                            //           Alert(
+                            //               title: Text("Error"),
+                            //               message: Text("No file path available for the selected song."),
+                            //               dismissButton: .default(Text("OK"))
+                            //           )
+                            //       }
+                            
                             
                             
                             Spacer()
                             
-                            
+                            // close/dismiss sheet button
                             Button(action: {
-                                // Define the action you want the button to perform here
                                 print("Button was tapped")
                                 self.showingSongView = false
                             }) {
                                 Image(systemName: "xmark.circle.fill")
-                                    .font(.title) // Optional: Adjust the size of the image
-                                    .foregroundColor(.gray) // Optional: Change the color of the image
-                                
+                                    .font(.title)
+                                    .foregroundColor(.gray)
                             }
                         }
                         .buttonStyle(PlainButtonStyle())
+                        
+                        // First row of info
                         HStack(spacing: 20){
                             Image(systemName: "folder.fill")
-                                
                                 .resizable()
-                                .foregroundColor(.white) // Dynamic fill colo
+                                .foregroundColor(.white)
                                 .background(
                                     .ultraThinMaterial,
                                     in: RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                 )
+                                )
                                 .opacity(0.2)
                                 .frame(width: 80, height: 75)
                             
@@ -177,10 +168,10 @@ struct songView: View {
                                         .background(
                                             .ultraThinMaterial,
                                             in: RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                         )
+                                        )
                                         .opacity(0.2)
                                         .frame(width: 150, height: 70)
-
+                                    
                                     if editingTitle {
                                         VStack(alignment: .leading) {
                                             Text("Title")
@@ -198,7 +189,7 @@ struct songView: View {
                                             .padding(.leading, 4)
                                             .onAppear {
                                                 songTitle = currentSong?.title ?? ""
-                                        }
+                                            }
                                         }
                                     } else {
                                         VStack(alignment: .leading) {
@@ -206,7 +197,7 @@ struct songView: View {
                                                 Text("Title")
                                                     .bold()
                                                     .padding(.leading, 1)
-                                                .padding(.top,14)
+                                                    .padding(.top,14)
                                                 
                                                 //Spacer()
                                                 
@@ -226,8 +217,8 @@ struct songView: View {
                                     }
                                 }
                                 .onHover { hover in
-                                               isHoveringTitle = hover
-                                           }
+                                    isHoveringTitle = hover
+                                }
                             }
                             
                             // stage box
@@ -238,10 +229,10 @@ struct songView: View {
                                         .background(
                                             .ultraThinMaterial,
                                             in: RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                         )
+                                        )
                                         .opacity(0.2)
                                         .frame(width: 150, height: 70)
-
+                                    
                                     if editingStage {
                                         VStack(alignment: .leading) {
                                             Text("Stage")
@@ -250,22 +241,22 @@ struct songView: View {
                                                 .padding(.top,-1)
                                             
                                             Menu {
-                                                                      ForEach(options, id: \.self) { option in
-                                                                          Button(option, action: {
-                                                                              currentSong?.stage = option
-                                                                              editingStage = false
-                                                                          })
-                                                                      }
-                                                                  } label: {
-                                                                      Label(currentSong?.stage ?? "Select stage", systemImage: "chevron.down")
-                                                                          .padding(.horizontal, 60)
-                                                                          .padding(.top, 7)
-                                                                          .padding(.bottom, 7)
-                                                                          .background(Color.gray)
-                                                                          .opacity(0.3)
-                                                                          .cornerRadius(15)
-                                                                          .frame(maxWidth: 40)
-                                                                  }
+                                                ForEach(options, id: \.self) { option in
+                                                    Button(option, action: {
+                                                        currentSong?.stage = option
+                                                        editingStage = false
+                                                    })
+                                                }
+                                            } label: {
+                                                Label(currentSong?.stage ?? "Select stage", systemImage: "chevron.down")
+                                                    .padding(.horizontal, 60)
+                                                    .padding(.top, 7)
+                                                    .padding(.bottom, 7)
+                                                    .background(Color.gray)
+                                                    .opacity(0.3)
+                                                    .cornerRadius(15)
+                                                    .frame(maxWidth: 40)
+                                            }
                                         }
                                     } else {
                                         VStack(alignment: .leading) {
@@ -273,7 +264,7 @@ struct songView: View {
                                                 Text("Stage")
                                                     .bold()
                                                     .padding(.leading, 1)
-                                                .padding(.top,14)
+                                                    .padding(.top,14)
                                                 
                                                 //Spacer()
                                                 
@@ -293,12 +284,12 @@ struct songView: View {
                                     }
                                 }
                                 .onHover { hover in
-                                               isHoveringStage = hover
-                                           }
+                                    isHoveringStage = hover
+                                }
                             }
                             
                             // rating box
-                           
+                            
                             VStack {
                                 ZStack(alignment: .topLeading) {
                                     RoundedRectangle(cornerRadius: 10)
@@ -306,10 +297,10 @@ struct songView: View {
                                         .background(
                                             .ultraThinMaterial,
                                             in: RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                         )
+                                        )
                                         .opacity(0.2)
                                         .frame(width: 150, height: 70)
-
+                                    
                                     if editingRating {
                                         VStack(alignment: .leading) {
                                             Text("Rating")
@@ -319,8 +310,8 @@ struct songView: View {
                                             
                                             TextField("Enter rating", text: $songRatingText, onCommit: {
                                                 if let rating = Double(songRatingText) {
-                                                               currentSong?.starRating = rating
-                                                           }
+                                                    currentSong?.starRating = rating
+                                                }
                                                 editingRating = false
                                             })
                                             .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -329,9 +320,9 @@ struct songView: View {
                                             .padding(.leading, 4)
                                             .onAppear {
                                                 if let rating = currentSong?.starRating {
-                                                               songRatingText = String(rating)
-                                                           }
-                                        }
+                                                    songRatingText = String(rating)
+                                                }
+                                            }
                                         }
                                     } else {
                                         VStack(alignment: .leading) {
@@ -341,13 +332,13 @@ struct songView: View {
                                                     .padding(.leading, 1)
                                                     .padding(.top,14)
                                                     .lineLimit(1)  // Ensures the text does not wrap
-                                                   // .frame(maxWidth: 200)
-                                                    
+                                                // .frame(maxWidth: 200)
+                                                
                                                 
                                                 Spacer()
                                                 
                                                 Image(systemName: "pencil")
-                                                   // .padding(.leading,70)
+                                                // .padding(.leading,70)
                                                     .opacity(isHoveringRating ? 1 : 0)
                                                     .animation(.default, value: isHoveringRating)
                                                     .padding(.trailing, 1)
@@ -362,8 +353,8 @@ struct songView: View {
                                     }
                                 }
                                 .onHover { hover in
-                                               isHoveringRating = hover
-                                           }
+                                    isHoveringRating = hover
+                                }
                             }
                             
                         } // end of top horizontal stack
@@ -378,10 +369,10 @@ struct songView: View {
                                         .background(
                                             .ultraThinMaterial,
                                             in: RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                         )
+                                        )
                                         .opacity(0.2)
                                         .frame(width: 250, height: 160)
-
+                                    
                                     if editingNotes {
                                         VStack(alignment: .leading) {
                                             Text("Notes")
@@ -399,7 +390,7 @@ struct songView: View {
                                             .padding(.leading, 4)
                                             .onAppear {
                                                 songNotesText = currentSong?.notes ?? ""
-                                        }
+                                            }
                                         }
                                     } else {
                                         VStack(alignment: .leading) {
@@ -407,12 +398,12 @@ struct songView: View {
                                                 Text("Notes")
                                                     .bold()
                                                     .padding(.leading, 1)
-                                                .padding(.top,14)
+                                                    .padding(.top,14)
                                                 
                                                 Spacer()
                                                 
                                                 Image(systemName: "pencil")
-                                                   // .padding(.leading,70)
+                                                // .padding(.leading,70)
                                                     .opacity(isHoveringNotes ? 1 : 0)
                                                     .animation(.default, value: isHoveringNotes)
                                                     .padding(.trailing, 1)
@@ -427,8 +418,8 @@ struct songView: View {
                                     }
                                 }
                                 .onHover { hover in
-                                               isHoveringNotes = hover
-                                           }
+                                    isHoveringNotes = hover
+                                }
                             } // end of genre box
                             
                             
@@ -440,7 +431,7 @@ struct songView: View {
                                             .background(
                                                 .ultraThinMaterial,
                                                 in: RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                             )
+                                            )
                                             .opacity(0.2)
                                             .frame(width: 150, height: 70)
                                         Text("Date created")
@@ -461,10 +452,10 @@ struct songView: View {
                                             .background(
                                                 .ultraThinMaterial,
                                                 in: RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                             )
+                                            )
                                             .opacity(0.2)
                                             .frame(width: 150, height: 70)
-
+                                        
                                         if editingTempo {
                                             VStack(alignment: .leading) {
                                                 Text("Tempo")
@@ -474,11 +465,11 @@ struct songView: View {
                                                 
                                                 TextField("Enter tempo", text: $songTempoText, onCommit: {
                                                     if let tempo = Double(songTempoText) {
-                                                                    currentSong?.tempo = tempo
-                                                                } else {
-                                                                    // Handle the case where the conversion fails
-                                                                    print("Invalid number entered")
-                                                                }
+                                                        currentSong?.tempo = tempo
+                                                    } else {
+                                                        // Handle the case where the conversion fails
+                                                        print("Invalid number entered")
+                                                    }
                                                     editingTempo = false
                                                 })
                                                 .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -497,12 +488,12 @@ struct songView: View {
                                                     Text("Tempo")
                                                         .bold()
                                                         .padding(.leading, 1)
-                                                    .padding(.top,14)
+                                                        .padding(.top,14)
                                                     
                                                     Spacer()
                                                     
                                                     Image(systemName: "pencil")
-                                                       // .padding(.leading,70)
+                                                    // .padding(.leading,70)
                                                         .opacity(isHoveringTempo ? 1 : 0)
                                                         .animation(.default, value: isHoveringTempo)
                                                         .padding(.trailing, 1)
@@ -517,8 +508,8 @@ struct songView: View {
                                         }
                                     }
                                     .onHover { hover in
-                                                   isHoveringTempo = hover
-                                               }
+                                        isHoveringTempo = hover
+                                    }
                                 }
                             } // end of tempo box
                             
@@ -533,10 +524,10 @@ struct songView: View {
                                             .background(
                                                 .ultraThinMaterial,
                                                 in: RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                             )
+                                            )
                                             .opacity(0.2)
                                             .frame(width: 150, height: 70)
-
+                                        
                                         if editingGenre {
                                             VStack(alignment: .leading) {
                                                 Text("Genre")
@@ -554,7 +545,7 @@ struct songView: View {
                                                 .padding(.leading, 4)
                                                 .onAppear {
                                                     songGenre = currentSong?.genre ?? ""
-                                            }
+                                                }
                                             }
                                         } else {
                                             VStack(alignment: .leading) {
@@ -562,12 +553,12 @@ struct songView: View {
                                                     Text("Genre")
                                                         .bold()
                                                         .padding(.leading, 1)
-                                                    .padding(.top,14)
+                                                        .padding(.top,14)
                                                     
                                                     Spacer()
                                                     
                                                     Image(systemName: "pencil")
-                                                       // .padding(.leading,70)
+                                                    // .padding(.leading,70)
                                                         .opacity(isHoveringGenre ? 1 : 0)
                                                         .animation(.default, value: isHoveringGenre)
                                                         .padding(.trailing, 1)
@@ -582,8 +573,8 @@ struct songView: View {
                                         }
                                     }
                                     .onHover { hover in
-                                                   isHoveringGenre = hover
-                                               }
+                                        isHoveringGenre = hover
+                                    }
                                 } // end of genre box
                                 
                                 // key box
@@ -594,10 +585,10 @@ struct songView: View {
                                             .background(
                                                 .ultraThinMaterial,
                                                 in: RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                             )
+                                            )
                                             .opacity(0.2)
                                             .frame(width: 150, height: 70)
-
+                                        
                                         if editingKey {
                                             VStack(alignment: .leading) {
                                                 Text("Key")
@@ -615,7 +606,7 @@ struct songView: View {
                                                 .padding(.leading, 4)
                                                 .onAppear {
                                                     songKey = currentSong?.key ?? ""
-                                            }
+                                                }
                                             }
                                         } else {
                                             VStack(alignment: .leading) {
@@ -623,12 +614,12 @@ struct songView: View {
                                                     Text("Key")
                                                         .bold()
                                                         .padding(.leading, 1)
-                                                    .padding(.top,14)
+                                                        .padding(.top,14)
                                                     
                                                     Spacer()
                                                     
                                                     Image(systemName: "pencil")
-                                                       // .padding(.leading,70)
+                                                    // .padding(.leading,70)
                                                         .opacity(isHoveringKey ? 1 : 0)
                                                         .animation(.default, value: isHoveringKey)
                                                         .padding(.trailing, 1)
@@ -643,37 +634,37 @@ struct songView: View {
                                         }
                                     }
                                     .onHover { hover in
-                                                   isHoveringKey = hover
-                                               }
+                                        isHoveringKey = hover
+                                    }
                                 } // end of key box
                             }
                         } // end of bottom horizontal
                         Button(action: {
                             confirmDelete = true
-                                }) {
+                        }) {
                             Text("Remove Song").foregroundColor(.red).frame(width: 120, height: 30)
-                            }
-                            .alert(isPresented: $confirmDelete) {
+                        }
+                        .alert(isPresented: $confirmDelete) {
                             Alert(
                                 title: Text("Are you sure you want to remove this song?"),
                                 message: Text("This action cannot be undone."),
                                 primaryButton: .destructive(Text("Yes")) {
                                     if let song = currentSong {
-                                                   deleteSong(songToRemove: song)
-                                                   print("Song Was Removed!")
-                                                   self.showingSongView = false
-                                               }
-                                    },
-                                    secondaryButton: .cancel(Text("No"))
-                                )
-                            }
+                                        deleteSong(songToRemove: song)
+                                        print("Song Was Removed!")
+                                        self.showingSongView = false
+                                    }
+                                },
+                                secondaryButton: .cancel(Text("No"))
+                            )
+                        }
                     }
                     .frame(maxWidth: 600)
                 }
             }
             //.foregroundColor(colorScheme == .dark ? .black : .white)
         }
-       
+        
         
     }
 }
@@ -682,16 +673,16 @@ struct songView_Previews: PreviewProvider {
     static var previews: some View {
         // Make the sample song optional
         let sampleSong: Song? = Song(title: "Good Morning", filePath: "asdfasdf", tempo: 120, genre: "Rap", key: "F# Minor", starRating: 3, notes: "A great song", stage: "Completed",bookmarkData: nil)
-             
-             // Create a constant binding to an optional song
-             let songBinding = Binding.constant(sampleSong)
-             
-             // Create a constant binding for showingSongView
-             let showingSongViewBinding = Binding.constant(true)
-             
-             // Now include showingSongView in the songView initializer
-             songView(showingSongView: showingSongViewBinding, currentSong: songBinding)
-                 .frame(width: 700, height: 400)
+        
+        // Create a constant binding to an optional song
+        let songBinding = Binding.constant(sampleSong)
+        
+        // Create a constant binding for showingSongView
+        let showingSongViewBinding = Binding.constant(true)
+        
+        // Now include showingSongView in the songView initializer
+        songView(showingSongView: showingSongViewBinding, currentSong: songBinding)
+            .frame(width: 700, height: 400)
     }
 }
 

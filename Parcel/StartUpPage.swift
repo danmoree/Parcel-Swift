@@ -1,9 +1,8 @@
-
 //
 //  ContentView.swift
-//  ChordCraft
+//  Parcel
 //
-//  Created by Bernabe  Macias on 4/4/24.
+// Start up page that shows recently worked on projects and lets user create a new project
 //
 
 
@@ -14,7 +13,6 @@ struct StartUpPage: View {
     // Variables
     @State private var showProjects = false
     @State private var currentSelection = 0
-    //@Query private var projects: [Project] // Changed Projects to projects to follow Swift naming conventions
     @State private var projects: [Project]
     @State private var selectedProject: Project? // keep track of selected project
     @EnvironmentObject var viewModel: ProjectViewModel
@@ -31,10 +29,7 @@ struct StartUpPage: View {
         let project3 = Project(projectName: "Project 3")
         project3.artistName = "Daniel Moreno"
         
-        // Create songs
-        let song1 = Song(title: "Song 1", filePath: "/path/to/song1", tempo: 120, genre: "Pop", key: "C", starRating: 4.5, notes: "Great song!", stage: "Completed")
-        let song2 = Song(title: "Song 2", filePath: "/path/to/song2", tempo: 130, genre: "Rock", key: "G", starRating: 4.0, notes: "Needs more work", stage: "Mixing")
-        let song3 = Song(title: "Song 3", filePath: "/path/to/song3", tempo: 110, genre: "Jazz", key: "F", starRating: 5.0, notes: "Almost done", stage: "Mastering")
+      
         
         // Add songs to projects
      //   project1.addSong(song1)
@@ -48,8 +43,8 @@ struct StartUpPage: View {
         NavigationView {
             if showProjects {
                           // Pass the projects to ListView
-                          ListView(options: options, currentSelection: $currentSelection)
-                          MainView(project: $selectedProject)
+                          Sidebar(options: options, currentSelection: $currentSelection)
+                          Dashboard(project: $selectedProject)
             } else {
                 // Pass the projects to SideView
                 SideView(showProjects: $showProjects, projects: projects, selectedProject: $selectedProject)

@@ -12,8 +12,9 @@ import SwiftData
 struct ParcelApp: App {
     
     private let urlApp: URL?
-       private let url: URL?
-
+    private let url: URL?
+        
+        // Prints out the path for the db
        init() {
            // Initialize urlApp and url here
            urlApp = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).last
@@ -24,6 +25,7 @@ struct ParcelApp: App {
              print("SwiftData db at \(url!.absoluteString)")
            }
        }
+    
     // Initial model setup for database
     var sharedModelContainer: ModelContainer = {
         // Define the schema with Song and Project classes
