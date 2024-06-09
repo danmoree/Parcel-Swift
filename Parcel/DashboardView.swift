@@ -352,41 +352,7 @@ struct Option: Hashable {
     let imageName: String
 }
 
-// side bar
-struct Sidebar: View {
-    let options: [Option]    // Options available in the list
-    @Binding var currentSelection: Int    // Binding to track the current selection
-    
-    var body: some View {
-        VStack {
-            //..
-            
-            Text("Parcel").font(.largeTitle).fontWeight(.semibold).padding(.top, 28).padding(.leading, -70)
-            //Divider()
-            ForEach(options.indices, id: \.self) { index in    // Display each option in a row
-                let option = options[index]     // Gets the currently selected option
-                HStack {
-                    Spacer()
-                    Text(option.title)
-                        .font(.title2)
-                        .fontWeight(.medium)
-                        .foregroundColor(index == currentSelection ? Color(.white) : Color(.gray))
-                    Spacer()
-                    Image(systemName: option.imageName)  // Displays the option's image
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 15)
-                    Spacer()
-                }
-                .padding(.leading, -19)
-                .onTapGesture {    // Handle tap gesture on an option
-                    currentSelection = index
-                    }
-            }
-            Spacer()
-        }
-    }
-}
+
 
 struct Dashboard_Previews: PreviewProvider {
     @State static var sampleProject: Project? = Project(projectName: "Sample Project") // Create an optional sample project
@@ -400,12 +366,9 @@ struct Dashboard_Previews: PreviewProvider {
 
 
 struct Sidebar_Previews: PreviewProvider {
-    @State static var currentSelection = 0
+    @State static var currentSelection: Int? = 0
     static var previews: some View {
-        Sidebar(options: [
-            Option(title: "Projects", imageName: "folder.fill"),
-            Option(title: "Settings", imageName: "gearshape")
-        ], currentSelection: $currentSelection)
+        Sidebar()
     }
 }
 

@@ -40,33 +40,34 @@ struct StartUpPage: View {
     }
 
     var body: some View {
-        NavigationView {
+       
             if showProjects {
                           // Pass the projects to ListView
-                          Sidebar(options: options, currentSelection: $currentSelection)
+                Sidebar()
                           Dashboard(project: $selectedProject)
             } else {
                 // Pass the projects to SideView
-                SideView(showProjects: $showProjects, projects: projects, selectedProject: $selectedProject)
+               // SideView(showProjects: $showProjects, projects: projects, selectedProject: $selectedProject)
                 ProjectView(showProjects: $showProjects, showingAddProjectForm: $showingAddProjectForm)
                     .sheet(isPresented: $showingAddProjectForm) {
                         AddProjectForm()
                     }
             }
-        }
+        
     }
     
     // Options for ListView
     var options: [Option] {
         [
             Option(title: "Settings", imageName: "gearshape") // Keep the "Settings" option
-        ] 
+        ]
     //    + projects.map { project in
     //        Option(title: project.projectName, imageName: "folder.fill")
     //    }
     }
 }
 
+// recent projects
 struct SideView: View {
     @Binding var showProjects: Bool
     let projects: [Project]
@@ -110,12 +111,42 @@ struct SideView: View {
     }
 }
 
+// Actual start up page
 struct ProjectView: View {
     @Binding var showProjects: Bool
     @Binding var showingAddProjectForm: Bool
+    
+    @State private var selectedProject: Project? // keep track of selected project
+    @EnvironmentObject var viewModel: ProjectViewModel
     var body: some View {
-        ZStack {
-            HStack {
+       
+            HStack(){
+                // recent projects
+                VStack{
+                    ZStack {
+                        VStack{
+                            ForEach(viewModel.projects) { project in
+                                Button(action: {
+                                    selectedProject = project
+                                    showProjects.toggle()
+                                }) {
+                                    HStack {
+                                        Text(project.projectName).foregroundColor(.black)
+                                        Image(systemName: "folder.fill").foregroundColor(.black)
+                                    }
+                                    .frame(maxWidth: 100, maxHeight: 50)
+                                    .cornerRadius(100)
+                                }
+                            }
+                        }
+                    }
+                    .frame(minWidth: 135, maxHeight: .infinity)
+                    .background(Color.white)
+                } // end of recent project side
+                .padding(.trailing, 40)
+                
+                Spacer()
+                
                 VStack {
                     Spacer()
                     Image("ChordCraft1")
@@ -162,14 +193,15 @@ struct ProjectView: View {
                         }
                     }
                     .frame(minWidth: 280, maxWidth: 280)
-                }
+                } // end of vstack for Parcel side
+                .frame(minWidth: 400, maxWidth: 400, minHeight: 400, maxHeight: 400)
+                .padding(.leading, 200)
                 .padding(.bottom, 70)
             }
-            .padding(.leading, 100)
-            .padding(.trailing, 100)
+            .padding(.trailing, 300)
         }
     }
-}
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
