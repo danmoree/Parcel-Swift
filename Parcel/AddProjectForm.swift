@@ -34,6 +34,7 @@ struct AddProjectForm: View {
             }
             .buttonStyle(PlainButtonStyle())
             .padding(.all, 12)
+            .focusable(false)
 
             HStack {
                 Text("New Project 💿")

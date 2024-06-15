@@ -41,75 +41,16 @@ struct StartUpPage: View {
 
     var body: some View {
        
-            if showProjects {
-                          // Pass the projects to ListView
-                Sidebar()
-                          Dashboard(project: $selectedProject)
-            } else {
-                // Pass the projects to SideView
-               // SideView(showProjects: $showProjects, projects: projects, selectedProject: $selectedProject)
-                ProjectView(showProjects: $showProjects, showingAddProjectForm: $showingAddProjectForm)
-                    .sheet(isPresented: $showingAddProjectForm) {
-                        AddProjectForm()
-                    }
-            }
+        ProjectView(showProjects: $showProjects, showingAddProjectForm: $showingAddProjectForm)
+           
+           
         
     }
     
-    // Options for ListView
-    var options: [Option] {
-        [
-            Option(title: "Settings", imageName: "gearshape") // Keep the "Settings" option
-        ]
-    //    + projects.map { project in
-    //        Option(title: project.projectName, imageName: "folder.fill")
-    //    }
-    }
+   
 }
 
-// recent projects
-struct SideView: View {
-    @Binding var showProjects: Bool
-    let projects: [Project]
-    @Binding var selectedProject: Project?
-    @EnvironmentObject var viewModel: ProjectViewModel
-    
-    var body: some View {
-        ZStack {
-            VStack(spacing: 20) {
-                Button(action: {
-                    showProjects.toggle()
-                }, label: {
-                    HStack {
-                        Text("Recent Project").foregroundColor(.black).fontWeight(.semibold)
-                        Image(systemName: "book.pages.fill").foregroundColor(.black)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: 50)
-                    .cornerRadius(100)
-                })
-                
-                // Display list of projects
-                ForEach(viewModel.projects) { project in
-                    Button(action: {
-                        selectedProject = project
-                        showProjects.toggle()
-                    }) {
-                        HStack {
-                            Text(project.projectName).foregroundColor(.black)
-                            Image(systemName: "folder.fill").foregroundColor(.black)
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: 50)
-                        .cornerRadius(100)
-                    }
-                }
-                
-                Spacer()
-            }
-            .padding()
-            .background(Color.white).ignoresSafeArea(edges: .bottom)
-        }
-    }
-}
+
 
 // Actual start up page
 struct ProjectView: View {
@@ -119,86 +60,102 @@ struct ProjectView: View {
     @State private var selectedProject: Project? // keep track of selected project
     @EnvironmentObject var viewModel: ProjectViewModel
     var body: some View {
-       
-            HStack(){
-                // recent projects
-                VStack{
-                    ZStack {
-                        VStack{
-                            ForEach(viewModel.projects) { project in
-                                Button(action: {
-                                    selectedProject = project
-                                    showProjects.toggle()
-                                }) {
-                                    HStack {
-                                        Text(project.projectName).foregroundColor(.black)
-                                        Image(systemName: "folder.fill").foregroundColor(.black)
-                                    }
-                                    .frame(maxWidth: 100, maxHeight: 50)
-                                    .cornerRadius(100)
-                                }
-                            }
-                        }
-                    }
-                    .frame(minWidth: 135, maxHeight: .infinity)
-                    .background(Color.white)
-                } // end of recent project side
-                .padding(.trailing, 40)
+        HStack {
+               // Recent projects
+               VStack(alignment: .leading) {
+                //   Text("Saved Projects")
+                //       .font(.headline)
+                //       .fontWeight(.medium)
+                //       .foregroundColor(Color.black)
+                //       .padding(.top)
+                   
+                   ForEach(viewModel.projects) { project in
+                       Button(action: {
+                           selectedProject = project
+                           showProjects.toggle()
+                       }) {
+                           HStack {
+                               Text(project.projectName)
+                                   .foregroundColor(.black)
+                               Image(systemName: "folder.fill")
+                                   .foregroundColor(.black)
+                           }
+                           .frame(maxWidth: 100, maxHeight: 50)
+                           .cornerRadius(100)
+                       }
+                       .padding(.vertical, 4)
+                       .focusable(false)
+                   }
                 
-                Spacer()
-                
-                VStack {
-                    Spacer()
-                    Image("ChordCraft1")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 250, height: 130, alignment: .centerLastTextBaseline)
-                        .padding(.top, 44)
-                    
-                    Text("Parcel")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                    
-                    Text("Version 1.0.0")
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                        .foregroundStyle(.gray)
-                    
-                    Spacer()
-                    
-                    Button {
-                        showingAddProjectForm = true
-                    } label: {
-                        Image(systemName: "plus.square")
-                        Text("Create New Project...")
-                            .padding(.leading, -89)
-                            .padding(.vertical, 8)
-                            .frame(maxWidth: 250)
-                            .cornerRadius(8)
-                    }
-                    .frame(minWidth: 280, maxWidth: 280)
-                    .padding(.bottom, 4)
-                    
-                    Button {
-                        showProjects.toggle()
-                    } label: {
-                        HStack {
-                            Image(systemName: "folder")
-                            Spacer()
-                            Text("Open Existing Project...")
-                                .padding(.leading, -89)
-                                .padding(.vertical, 8)
-                                .frame(maxWidth: 250)
-                                .cornerRadius(8)
-                        }
-                    }
-                    .frame(minWidth: 280, maxWidth: 280)
-                } // end of vstack for Parcel side
-                .frame(minWidth: 400, maxWidth: 400, minHeight: 400, maxHeight: 400)
-                .padding(.leading, 200)
-                .padding(.bottom, 70)
-            }
-            .padding(.trailing, 300)
+                   
+                   Spacer()
+               }
+               .frame(minWidth: 135, maxHeight: .infinity)
+               .background(Color.white)
+               //.padding(.leading, 40)
+               
+               Spacer()
+               
+               // Main content
+               VStack {
+                   Spacer()
+                   Image("ChordCraft1")
+                       .resizable()
+                       .aspectRatio(contentMode: .fit)
+                       .frame(width: 250, height: 130, alignment: .centerLastTextBaseline)
+                       .padding(.top, 44)
+                   
+                   Text("Parcel")
+                       .font(.largeTitle)
+                       .fontWeight(.bold)
+                   
+                   Text("Version 1.0.0")
+                       .font(.subheadline)
+                       .fontWeight(.medium)
+                       .foregroundStyle(.gray)
+                   
+                   Spacer()
+                   
+                   Button {
+                       showingAddProjectForm = true
+                   } label: {
+                       Image(systemName: "plus.square")
+                       Text("Create New Project...")
+                           .padding(.leading, -89)
+                           .padding(.vertical, 8)
+                           .frame(maxWidth: 250)
+                           .cornerRadius(8)
+                   }
+                   .frame(minWidth: 280, maxWidth: 280)
+                   .padding(.bottom, 4)
+                   .focusable(false)
+                   .sheet(isPresented: $showingAddProjectForm) {
+                       AddProjectForm()
+                           .frame(width: 400, height: 500)
+                   }
+                   
+                   Button {
+                       showProjects.toggle()
+                   } label: {
+                       HStack {
+                           Image(systemName: "folder")
+                           Spacer()
+                           Text("Open Existing Project...")
+                               .padding(.leading, -89)
+                               .padding(.vertical, 8)
+                               .frame(maxWidth: 250)
+                               .cornerRadius(8)
+                       }
+                   }
+                   .frame(minWidth: 280, maxWidth: 280)
+                   .padding(.bottom, 70)
+                   .focusable(false)
+               }
+               .padding(.trailing)
+            Spacer()
+           }
+        .frame(minWidth: 700, minHeight: 400)
+           //.padding(.horizontal, 20)
         }
     }
 
