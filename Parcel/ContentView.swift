@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  Parcel
 //
-//  Controls the navigation view?
+//  Controls the navigation view
 //
 
 import SwiftUI
@@ -11,7 +11,7 @@ import SwiftData
 struct ContentView: View {
     @State private var isShowingStartupPage = true
     @State private var selectedProject: Project? = nil
-    //@State private var projects: [Project] = []
+    
     @State var currentOption: Int? = 0
     
     let options: [Option] = [ // Options available in the list
@@ -22,12 +22,12 @@ struct ContentView: View {
     var body: some View {
         
             if isShowingStartupPage {
-                StartUpPage()
+                StartUpPage(isShowingStartupPage: $isShowingStartupPage, selectedProject: $selectedProject)
             } else {
                 NavigationView {
                     Sidebar()
                     if currentOption == 0 {
-                        ProjectDashboard(selectedProject: $selectedProject)
+                        Dashboard(project: $selectedProject)
                     } else if currentOption == 1 {
                         Text("Testing Settings Tab")
                     }

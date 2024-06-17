@@ -12,36 +12,18 @@ import SwiftData
 struct StartUpPage: View {
     // Variables
     @State private var showProjects = false
-    @State private var currentSelection = 0
-    @State private var projects: [Project]
-    @State private var selectedProject: Project? // keep track of selected project
-    @EnvironmentObject var viewModel: ProjectViewModel
     @State private var showingAddProjectForm = false
     
-    init() {
-        // Initialize with hardcoded projects for testing
-        let project1 = Project(projectName: "Project 1")
-        project1.artistName = "Kanye West"
-        
-        let project2 = Project(projectName: "Project 2")
-        project2.artistName = "Taylor Swift"
-        
-        let project3 = Project(projectName: "Project 3")
-        project3.artistName = "Daniel Moreno"
-        
-      
-        
-        // Add songs to projects
-     //   project1.addSong(song1)
-     //   project2.addSong(song2)
-     //   project3.addSong(song3)
-        
-        _projects = State(initialValue: [project1, project2, project3])
-    }
+    @EnvironmentObject var viewModel: ProjectViewModel
+    
+    @Binding var isShowingStartupPage: Bool
+    @Binding var selectedProject: Project? // keep track of selected project
+    
+    
 
     var body: some View {
        
-        ProjectView(showProjects: $showProjects, showingAddProjectForm: $showingAddProjectForm)
+        ProjectView(showProjects: $showProjects, showingAddProjectForm: $showingAddProjectForm, isShowingStartupPage: $isShowingStartupPage, selectedProject: $selectedProject)
            
            
         
@@ -56,8 +38,10 @@ struct StartUpPage: View {
 struct ProjectView: View {
     @Binding var showProjects: Bool
     @Binding var showingAddProjectForm: Bool
+    @Binding var isShowingStartupPage: Bool
+
+    @Binding var selectedProject: Project? // keep track of selected project
     
-    @State private var selectedProject: Project? // keep track of selected project
     @EnvironmentObject var viewModel: ProjectViewModel
     var body: some View {
         HStack {
@@ -72,7 +56,7 @@ struct ProjectView: View {
                    ForEach(viewModel.projects) { project in
                        Button(action: {
                            selectedProject = project
-                           showProjects.toggle()
+                           isShowingStartupPage.toggle()
                        }) {
                            HStack {
                                Text(project.projectName)
@@ -160,7 +144,28 @@ struct ProjectView: View {
     }
 
 
-struct ContentView_Previews: PreviewProvider {
+//struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let schema = Schema([
+//            Song.self, Project.self
+//        ])
+//
+//        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+//
+//        let modelContainer: ModelContainer
+//        do {
+//            modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+//        } catch {
+//            fatalError("Could not create ModelContainer: \(error)")
+//        }
+//
+//        return StartUpPage()
+//            .environmentObject(ProjectViewModel(modelContainer: modelContainer))
+//    }
+//}
+
+
+struct StartUpPage_Previews: PreviewProvider {
     static var previews: some View {
         let schema = Schema([
             Song.self, Project.self
@@ -175,8 +180,16 @@ struct ContentView_Previews: PreviewProvider {
             fatalError("Could not create ModelContainer: \(error)")
         }
 
-        return StartUpPage()
-            .environmentObject(ProjectViewModel(modelContainer: modelContainer))
+        let sampleProjects = [
+            Project(projectName: "Project 1"),
+            Project(projectName: "Project 2"),
+            Project(projectName: "Project 3")
+        ]
+
+        let viewModel = ProjectViewModel(modelContainer: modelContainer)
+        viewModel.projects = sampleProjects
+
+        return StartUpPage(isShowingStartupPage: .constant(true), selectedProject: .constant(nil))
+            .environmentObject(viewModel)
     }
 }
-
