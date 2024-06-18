@@ -8,6 +8,24 @@
 import SwiftUI
 import SwiftData
 
+
+struct TransparentTitleBar: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSView {
+        let nsView = NSView()
+        DispatchQueue.main.async {
+            if let window = nsView.window {
+                window.titlebarAppearsTransparent = true
+                window.titleVisibility = .hidden
+                window.isMovableByWindowBackground = true
+                window.backgroundColor = .clear
+            }
+        }
+        return nsView
+    }
+
+    func updateNSView(_ nsView: NSView, context: Context) {}
+}
+
 struct ContentView: View {
     @State private var isShowingStartupPage = true
     @State private var selectedProject: Project? = nil
@@ -18,33 +36,63 @@ struct ContentView: View {
         .init(title: "Projects", imageName: "folder.fill"),
         .init(title: "Settings", imageName: "gearshape")
     ]
+  
     
     var body: some View {
         
-            if isShowingStartupPage {
-                StartUpPage(isShowingStartupPage: $isShowingStartupPage, selectedProject: $selectedProject)
-            } else {
-                NavigationView {
-                    Sidebar()
-                    if currentOption == 0 {
-                        Dashboard(project: $selectedProject)
-                    } else if currentOption == 1 {
-                        Text("Testing Settings Tab")
-                    }
-                    else {
-                        Text("Select an option")
-                    }
-                }
-                .toolbar {
-                    ToolbarItem(placement: .navigation) {
-                        Button(action: toggleSidebar) {
-                            Image(systemName: "sidebar.leading")
+        ZStack {
+            // Background Image
+            GeometryReader { geometry in
+                Image("leaf")
+                    .resizable()
+                    .scaledToFill()
+                    .edgesIgnoringSafeArea(.all)
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .blur(radius: 1.5)
+            }
+            
+            VStack {
+                if isShowingStartupPage {
+                    StartUpPage(isShowingStartupPage: $isShowingStartupPage, selectedProject: $selectedProject)
+                } else {
+                    NavigationView {
+                        Sidebar(selectedProject: $selectedProject)
+                        if currentOption == 0 {
+                            Dashboard(project: $selectedProject)
+                        } else if currentOption == 1 {
+                            Text("Testing Settings Tab")
+                        }
+                        else {
+                            Text("Select an option")
                         }
                     }
+                    .toolbar {
+                        ToolbarItem(placement: .navigation) {
+                            Button(action: toggleSidebar) {
+                                Image(systemName: "sidebar.leading")
+                            }
+                        }
+                        
+                        ToolbarItem(placement: .automatic) {
+                            Spacer() // Pushes the next button to the trailing side
+                        }
+                        
+                        ToolbarItem(placement: .automatic) {
+                            Button(action: {
+                                // Add your action here
+                            }) {
+                                Image(systemName: "gearshape")
+                            }
+                        }
+                    }
+                  
                 }
+                
             }
-        
+            TransparentTitleBar()
+        }
     }
+        
     
     private func toggleSidebar() {
         #if os(macOS)
@@ -52,6 +100,10 @@ struct ContentView: View {
         #endif
     }
 }
+
+
+
+
 
 // Mock-up for the ProjectDashboard view
 struct ProjectDashboard: View {
@@ -67,42 +119,20 @@ struct ProjectDashboard: View {
 }
 
 
-/*
-// side bar
+
 struct Sidebar: View {
-    let options: [Option]
-    //@Binding var currentSelection: Int?
+    @Binding var selectedProject: Project?
     
     var body: some View {
-        List(selection: $currentSelection) {
-            ForEach(options.indices, id: \.self) { index in
-                NavigationLink(
-                    destination: EmptyView(), // Destination view (to be replaced)
-                    tag: index,
-                    selection: $currentSelection
-                ) {
-                    Label(options[index].title, systemImage: options[index].imageName)
-                }
-            }
-        }
-        .listStyle(SidebarListStyle())
-        .navigationTitle("Sidebar")
-    }
-}
-
- */
-
-struct Sidebar: View {
-    var body: some View {
         List {
-            NavigationLink(destination: DetailView1()) {
-                Label("Detail 1", systemImage: "1.circle")
+            NavigationLink(destination: Dashboard(project: $selectedProject)) {
+                Label("Project", systemImage: "1.circle")
             }
-            NavigationLink(destination: DetailView2()) {
-                Label("Detail 2", systemImage: "2.circle")
-            }
+          //  NavigationLink(destination: DetailView2()) {
+          //      Label("Plugins", systemImage: "2.circle")
+          //  }
             NavigationLink(destination: DetailView3()) {
-                Label("Detail 3", systemImage: "3.circle")
+                Label("Settings", systemImage: "3.circle")
             }
         }
         .listStyle(SidebarListStyle())
@@ -159,4 +189,12 @@ struct DetailView3: View {
 
     return ContentView()
         .environmentObject(ProjectViewModel(modelContainer: modelContainer))
+}
+
+struct Sidebar_Previews: PreviewProvider {
+    @State static var selectedProject: Project? = nil
+
+    static var previews: some View {
+        Sidebar(selectedProject: $selectedProject)
+    }
 }

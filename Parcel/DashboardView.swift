@@ -27,20 +27,20 @@ struct Dashboard : View {
         ZStack{
            
             // background img
-            GeometryReader { geometry in
-                Image("leaf")
-                    .resizable()
-                    .scaledToFill()
-                    .edgesIgnoringSafeArea(.all)
-                    .opacity(1)
-                    .frame(width: geometry.size.width, height: geometry.size.height)
-                    .blur(radius: 1.5)
-                    .clipped()
-            }
+          //  GeometryReader { geometry in
+          //      Image("leaf")
+          //          .resizable()
+          //          .scaledToFill()
+          //          .edgesIgnoringSafeArea(.all)
+          //          .opacity(1)
+          //          .frame(width: geometry.size.width, height: geometry.size.height)
+          //          .blur(radius: 1.5)
+          //          .clipped()
+          //  }
             
         ScrollView {
                 VStack {
-                    Spacer()
+                    //Spacer()
                     // Header message
                     // this gets updated bassed on the time
                     // 3am - 12pm - Good Morning!
@@ -221,6 +221,7 @@ struct Dashboard : View {
                 .padding()
                 Spacer()
             }
+       .padding(.top, 1)
         }
     }
        
@@ -365,10 +366,4 @@ struct Dashboard_Previews: PreviewProvider {
 
 
 
-struct Sidebar_Previews: PreviewProvider {
-    @State static var currentSelection: Int? = 0
-    static var previews: some View {
-        Sidebar()
-    }
-}
 
