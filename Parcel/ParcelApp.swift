@@ -53,3 +53,10 @@ struct ParcelApp: App {
         .modelContainer(sharedModelContainer) // Injects the model container into the environment
     }
 }
+
+extension NSTextField {
+    open override var focusRingType: NSFocusRingType {
+        get{.none}
+        set{}
+    }
+}
