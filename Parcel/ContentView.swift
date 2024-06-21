@@ -29,6 +29,7 @@ struct TransparentTitleBar: NSViewRepresentable {
 struct ContentView: View {
     @State private var isShowingStartupPage = true
     @State private var selectedProject: Project? = nil
+    @State private var isShowingSettings = false
     
     @State var currentOption: Int? = 0
     
@@ -43,12 +44,14 @@ struct ContentView: View {
         ZStack {
             // Background Image
             GeometryReader { geometry in
-                Image("leaf")
+                Image("sands")
                     .resizable()
                     .scaledToFill()
                     .edgesIgnoringSafeArea(.all)
-                    .frame(width: geometry.size.width, height: geometry.size.height)
-                    .blur(radius: 1.5)
+                    //.frame(width: geometry.size.width, height: geometry.size.height)
+                    .blur(radius: 5.5)
+                    //.opacity(0.9)
+                    .overlay(Color.black.opacity(0.5)) // Dark overlay
             }
             
             VStack {
@@ -56,7 +59,7 @@ struct ContentView: View {
                     StartUpPage(isShowingStartupPage: $isShowingStartupPage, selectedProject: $selectedProject)
                 } else {
                     NavigationView {
-                        Sidebar(selectedProject: $selectedProject)
+                        Sidebar(selectedProject: $selectedProject, isShowingSettings: $isShowingSettings)
                         if currentOption == 0 {
                             Dashboard(project: $selectedProject)
                         } else if currentOption == 1 {
@@ -71,6 +74,7 @@ struct ContentView: View {
                             Button(action: toggleSidebar) {
                                 Image(systemName: "sidebar.leading")
                             }
+                            .focusable(false)
                         }
                         
                         ToolbarItem(placement: .automatic) {
@@ -79,11 +83,15 @@ struct ContentView: View {
                         
                         ToolbarItem(placement: .automatic) {
                             Button(action: {
-                                // Add your action here
+                                isShowingSettings = true
                             }) {
                                 Image(systemName: "gearshape")
                             }
+                            .focusable(false)
                         }
+                    }
+                    .sheet(isPresented: $isShowingSettings) {
+                        DetailView3()
                     }
                   
                 }
@@ -105,40 +113,47 @@ struct ContentView: View {
 
 
 
-// Mock-up for the ProjectDashboard view
-struct ProjectDashboard: View {
-    @Binding var selectedProject: Project?
-
-    var body: some View {
-        if let selectedProject = selectedProject {
-            Text("Dashboard for \(selectedProject.projectName)")
-        } else {
-            Text("Select a project")
-        }
-    }
-}
-
-
-
 struct Sidebar: View {
     @Binding var selectedProject: Project?
+    @Binding var isShowingSettings: Bool
     
     var body: some View {
-        List {
-            NavigationLink(destination: Dashboard(project: $selectedProject)) {
-                Label("Project", systemImage: "1.circle")
+        ZStack {
+            
+            List {
+                NavigationLink(destination: Dashboard(project: $selectedProject)) {
+                    Image(systemName: "folder.fill")
+                    Label("Project", systemImage: "folder.fill")
+                        .labelStyle(.titleOnly)
+                        .fontWeight(.light)
+                }
+                NavigationLink(destination: DetailView2()) {
+                    Image(systemName: "waveform")
+                    Label("Samples", systemImage: "2.circle")
+                        .labelStyle(.titleOnly)
+                        .fontWeight(.light)
+                }
+                
+                Button(action: {
+                               isShowingSettings = true // Show settings sheet
+                           }) {
+                               Image(systemName: "gearshape")
+                               Label("Settings", systemImage: "gearshape")
+                                   .labelStyle(.titleOnly)
+                           }
+                           .buttonStyle(PlainButtonStyle())
+                    
+                        
+                }
             }
-          //  NavigationLink(destination: DetailView2()) {
-          //      Label("Plugins", systemImage: "2.circle")
-          //  }
-            NavigationLink(destination: DetailView3()) {
-                Label("Settings", systemImage: "3.circle")
-            }
+            .listStyle(SidebarListStyle())
+            .navigationTitle("Sidebar")
+            
+            
         }
-        .listStyle(SidebarListStyle())
-        .navigationTitle("Sidebar")
+        
     }
-}
+
 
 struct DetailView: View {
     var body: some View {
@@ -163,8 +178,8 @@ struct DetailView2: View {
 
 struct DetailView3: View {
     var body: some View {
-        Text("Detail View 3")
-            .navigationTitle("Detail 3")
+        Text("Future settings")
+            .navigationTitle("Settings")
     }
 }
 #Preview {
@@ -193,8 +208,8 @@ struct DetailView3: View {
 
 struct Sidebar_Previews: PreviewProvider {
     @State static var selectedProject: Project? = nil
-
+    @State static var isShowingSettings: Bool = true
     static var previews: some View {
-        Sidebar(selectedProject: $selectedProject)
+        Sidebar(selectedProject: $selectedProject, isShowingSettings: $isShowingSettings)
     }
 }

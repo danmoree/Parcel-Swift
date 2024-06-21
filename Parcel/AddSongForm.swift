@@ -45,6 +45,7 @@ struct AddsongForm: View {
                         .font(.title)
                         .foregroundColor(.gray)
                 }
+                .focusable(false)
             }
             
             HStack {
