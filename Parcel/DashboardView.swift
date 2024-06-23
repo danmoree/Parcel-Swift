@@ -14,6 +14,7 @@ struct Dashboard : View {
     // all variables needed
     @State private var headerMessage: String = ""   // variables that can change??
     @State private var showingAddSongForm = false
+    @State private var showingProjectSettings = false
     @Binding var project: Project?  // Parameter like variable
     @EnvironmentObject var viewModel: ProjectViewModel // lets this file get access to the ProjectViewModel file
     
@@ -66,6 +67,11 @@ struct Dashboard : View {
                                 print("Button tapped")
                                 showingAddSongForm = true   // opens up sheet
                                 
+                            })
+                            .padding(.bottom,-20)
+                            
+                            projectSettingsButton(action: {
+                                showingProjectSettings = true
                             })
                             .padding(.bottom,-20)
                         } // end of hstack
@@ -345,7 +351,28 @@ struct addButton: View {
     }
 }
 
+// add new button, top right
+struct projectSettingsButton: View {
+    var action: () -> Void
+    @State private var isHovering = false
 
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: "ellipsis")
+                .font(.system(size: isHovering ? 21 : 20))
+                .foregroundColor(isHovering ? .black.opacity(0.8) : .gray)
+        }
+        .frame(width: 30, height: 30)
+        .buttonStyle(.plain)
+        .background(isHovering ? Color.gray.opacity(0.2) : Color.clear)
+        .cornerRadius(5)
+        .onHover { hover in
+            withAnimation(.easeInOut) {
+                isHovering = hover
+            }
+        }
+    }
+}
 
 // Defines a struct to represent an option with a title and an image name
 struct Option: Hashable {
