@@ -12,7 +12,9 @@ struct ProjectSettings: View {
     
     @State private var projectName: String = ""
     @State private var artistName: String = ""
-    @State private var buttonText = "Create Project"
+    @State private var buttonText = "Save Changes"
+    
+    @Binding var showingProjectSettings: Bool
     
     @EnvironmentObject var viewModel: ProjectViewModel
     
@@ -93,11 +95,12 @@ struct ProjectSettings: View {
             .padding(.bottom, 20)
             .padding(.horizontal, 40)
             
+            // Future layout options
             VStack {
                 HStack {
-                    Text("Layout")
-                        .font(.title2)
-                        .fontWeight(.medium)
+                    //Text("Layout")
+                    //    .font(.title2)
+                    //    .fontWeight(.medium)
                     Spacer()
                 }
                 
@@ -135,8 +138,9 @@ struct ProjectSettings: View {
 }
 
 struct ProjectSetting_Previews: PreviewProvider {
+    
     static var previews: some View {
-        ProjectSettings()
+        ProjectSettings(showingProjectSettings: .constant(true))
             .frame(width: 600, height: 500)
             .previewLayout(.sizeThatFits)
             .environmentObject(ProjectViewModel(modelContainer: {
