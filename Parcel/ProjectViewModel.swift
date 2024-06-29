@@ -65,4 +65,18 @@ class ProjectViewModel: ObservableObject {
                 print("Failed to remove song from project: \(error)")
             }
         }
+    
+    func deleteProject(project: Project) {
+        let context = modelContainer.mainContext
+        context.delete(project)
+        
+        do {
+            try context.save()
+            if let index = projects.firstIndex(of: project) {
+                projects.remove(at: index)
+            }
+        } catch {
+            print("Failed to delete the project: \(error)")
+        }
+    }
 }

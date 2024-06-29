@@ -13,7 +13,9 @@ struct ProjectSettings: View {
     @State private var projectName: String = ""
     @State private var artistName: String = ""
     @State private var buttonText = "Save Changes"
+    @State private var showAlert = false
     
+    @Binding var project: Project?
     @Binding var showingProjectSettings: Bool
     
     @EnvironmentObject var viewModel: ProjectViewModel
@@ -27,7 +29,7 @@ struct ProjectSettings: View {
                 
                 // delete button
                 Button(action: {
-                    presentationMode.wrappedValue.dismiss()
+                    showAlert = true
                 }) {
                     Image(systemName: "trash")
                         .font(.title)
@@ -48,6 +50,20 @@ struct ProjectSettings: View {
             .buttonStyle(PlainButtonStyle())
             .padding(.all, 12)
             .focusable(false)
+            .alert(isPresented: $showAlert) {
+                Alert(
+                    title: Text("Delete Project"),
+                    message: Text("Are you sure you want to delete this project? This action cannot be undone!"),
+                    primaryButton: .destructive(Text("Delete")) {
+                        if let project = project {
+                            viewModel.deleteProject(project: project)
+                            //deleteProjectAndRelaunch()
+                        }
+                        
+                    },
+                    secondaryButton: .cancel()
+                )
+            }
             
             HStack {
                 Text("Project Settings ")
@@ -135,18 +151,24 @@ struct ProjectSettings: View {
                 .opacity(0.3)
         }
     }
-}
-
-struct ProjectSetting_Previews: PreviewProvider {
     
-    static var previews: some View {
-        ProjectSettings(showingProjectSettings: .constant(true))
-            .frame(width: 600, height: 500)
-            .previewLayout(.sizeThatFits)
-            .environmentObject(ProjectViewModel(modelContainer: {
-                let schema = Schema([Song.self, Project.self])
-                let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-                return try! ModelContainer(for: schema, configurations: [configuration])
-            }()))
+    
+    
+    
+    
+    
+    
+    struct ProjectSetting_Previews: PreviewProvider {
+        
+        static var previews: some View {
+            ProjectSettings(project: .constant(Project(projectName: "Sample Project")), showingProjectSettings: .constant(true))
+                .frame(width: 600, height: 500)
+                .previewLayout(.sizeThatFits)
+                .environmentObject(ProjectViewModel(modelContainer: {
+                    let schema = Schema([Song.self, Project.self])
+                    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+                    return try! ModelContainer(for: schema, configurations: [configuration])
+                }()))
+        }
     }
 }

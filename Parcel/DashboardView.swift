@@ -81,7 +81,7 @@ struct Dashboard : View {
                                 .frame(width: 800, height: 700)
                         }
                         .sheet(isPresented: $showingProjectSettings) {
-                            ProjectSettings(showingProjectSettings: $showingProjectSettings)
+                            ProjectSettings(project: $project,showingProjectSettings: $showingProjectSettings)
                                 .frame(width: 500, height: 500)
                         }
                         
