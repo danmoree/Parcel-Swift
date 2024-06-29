@@ -1,3 +1,8 @@
+
+<img src="https://github.com/danmoree/Parcel-Swift/assets/123407190/01676713-3325-4e50-821d-29169ee743da" alt="alt text" width="500">
+<img src="https://github.com/danmoree/Parcel-Swift/assets/123407190/8efb5d74-c4ed-4d77-bbeb-e046ce44cc36" alt="alt text" width="500">
+
+
 # Parcel - The app for music producers
 
 Parcel is a music industry-focused project management system designed specifically for music producers, songwriters, musicians, and sound engineers. The application aims to simplify the organization of songs for an album or a compilation by allowing users to categorize and label them based on characteristics such as tempo, genre, mood, and key. Additionally, it addresses the various stages of music production, from general ideas to songwriting, mixing, mastering and Completed, providing a digital solution to streamline progress tracking for music artists.
