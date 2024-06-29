@@ -79,4 +79,29 @@ class ProjectViewModel: ObservableObject {
             print("Failed to delete the project: \(error)")
         }
     }
+    
+    func renameProject (_ project: Project, to newName: String) {
+        // set new name
+        project.projectName = newName
+        
+        // save the change
+        do {
+            try modelContainer.mainContext.save()
+        } catch {
+            print("Failed to save new project name: \(error)")
+        }
+    }
+    
+    func renameArtist (_ project: Project, to newArtist: String) {
+        // set new name
+        project.artistName = newArtist
+        
+        // save the change
+        do {
+            try modelContainer.mainContext.save()
+        } catch {
+            print("Failed to save new artist name: \(error)")
+        }
+        
+    }
 }

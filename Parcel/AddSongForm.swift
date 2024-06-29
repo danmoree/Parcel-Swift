@@ -30,6 +30,7 @@ struct AddsongForm: View {
     
     @State private var selectedFilePath: String?
     
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         VStack(spacing: 20) {
@@ -223,6 +224,7 @@ struct AddsongForm: View {
                 Button(action: {
                     if addItem() {
                         self.buttonText = "Song added!"
+                        presentationMode.wrappedValue.dismiss()
                     } else {
                         self.buttonText = "failed, try again"
                     }

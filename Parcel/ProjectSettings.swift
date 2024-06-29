@@ -128,7 +128,15 @@ struct ProjectSettings: View {
             
             HStack {
                 Button(action: {
-                    viewModel.addProject(projectName: projectName, artistName: artistName)
+                    
+                    if let project = project {
+                        viewModel.renameProject(project, to: projectName)
+                    }
+                    
+                    if let project = project {
+                        viewModel.renameArtist(project, to: artistName)
+                    }
+                    
                     presentationMode.wrappedValue.dismiss()
                 }) {
                     Text(buttonText)
