@@ -34,6 +34,7 @@ struct ContentView: View {
     @State private var isShowingSettings = false
     
     @State var currentOption: Int? = 0
+    @State private var selectedSong: Song? = nil
     
     let options: [Option] = [ // Options available in the list
         .init(title: "Projects", imageName: "folder.fill"),
@@ -61,16 +62,22 @@ struct ContentView: View {
                     StartUpPage(isShowingStartupPage: $isShowingStartupPage, selectedProject: $selectedProject)
                 } else {
                     NavigationView {
-                        Sidebar(selectedProject: $selectedProject, isShowingSettings: $isShowingSettings)
+                        Sidebar(selectedProject: $selectedProject, isShowingSettings: $isShowingSettings, selectedSong: $selectedSong)
                      
-                        if let currentRoute = appState.currentRoute {
-                            switch currentRoute {
-                            case .dashboard:
-                                Dashboard(project: $selectedProject)
-                            case .songView:
-                                songView()
+                        Group {
+                            if let currentRoute = appState.currentRoute {
+                                switch currentRoute {
+                                case .dashboard:
+                                    Dashboard(project: $selectedProject, selectedSong: $selectedSong)
+                                        .transition(.opacity)
+                                case .songView:
+                                    songView(currentSong: $selectedSong)
+                                        .transition(.opacity)
+                                }
+                                
                             }
                         }
+                        .animation(.easeInOut(duration: 0.2), value: appState.currentRoute)
                        
                     }
                     .toolbar {
@@ -120,12 +127,13 @@ struct ContentView: View {
 struct Sidebar: View {
     @Binding var selectedProject: Project?
     @Binding var isShowingSettings: Bool
+    @Binding var selectedSong: Song?
     
     var body: some View {
         ZStack {
             
             List {
-                NavigationLink(destination: Dashboard(project: $selectedProject)) {
+                NavigationLink(destination: Dashboard(project: $selectedProject, selectedSong: $selectedSong)) {
                     Image(systemName: "folder.fill")
                     Label("Project", systemImage: "folder.fill")
                         .labelStyle(.titleOnly)
@@ -213,7 +221,9 @@ struct DetailView3: View {
 struct Sidebar_Previews: PreviewProvider {
     @State static var selectedProject: Project? = nil
     @State static var isShowingSettings: Bool = true
+    @State static var selectedSong: Song? = nil
+    
     static var previews: some View {
-        Sidebar(selectedProject: $selectedProject, isShowingSettings: $isShowingSettings)
+        Sidebar(selectedProject: $selectedProject, isShowingSettings: $isShowingSettings, selectedSong: $selectedSong)
     }
 }
