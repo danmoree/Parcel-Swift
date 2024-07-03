@@ -27,6 +27,8 @@ struct TransparentTitleBar: NSViewRepresentable {
 }
 
 struct ContentView: View {
+    @EnvironmentObject private var appState: AppState
+    
     @State private var isShowingStartupPage = true
     @State private var selectedProject: Project? = nil
     @State private var isShowingSettings = false
@@ -60,14 +62,16 @@ struct ContentView: View {
                 } else {
                     NavigationView {
                         Sidebar(selectedProject: $selectedProject, isShowingSettings: $isShowingSettings)
-                        if currentOption == 0 {
-                            Dashboard(project: $selectedProject)
-                        } else if currentOption == 1 {
-                            Text("Testing Settings Tab")
+                     
+                        if let currentRoute = appState.currentRoute {
+                            switch currentRoute {
+                            case .dashboard:
+                                Dashboard(project: $selectedProject)
+                            case .songView:
+                                songView()
+                            }
                         }
-                        else {
-                            Text("Select an option")
-                        }
+                       
                     }
                     .toolbar {
                         ToolbarItem(placement: .navigation) {
