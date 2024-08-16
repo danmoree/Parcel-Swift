@@ -48,6 +48,7 @@ struct ParcelApp: App {
         WindowGroup {
             ContentView() // Main view of the app
                 .environmentObject(ProjectViewModel(modelContainer: sharedModelContainer)) // Inject the view model into the environment
+                .environmentObject(AppState())
         }
         .windowStyle(HiddenTitleBarWindowStyle()) // Hides the title bar
         .modelContainer(sharedModelContainer) // Injects the model container into the environment

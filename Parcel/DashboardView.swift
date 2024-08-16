@@ -17,6 +17,7 @@ struct Dashboard : View {
     @State private var showingProjectSettings = false
     @Binding var project: Project?  // Parameter like variable
     @EnvironmentObject var viewModel: ProjectViewModel // lets this file get access to the ProjectViewModel file
+    @Binding var selectedSong: Song?
     
     // grabs the songs from the project, and stores in a list called songs
     var songs: [Song] {
@@ -120,7 +121,7 @@ struct Dashboard : View {
                             .padding(.leading, 8.0)
                         HStack {
                             //Call SubsectionView to be displayed
-                            SubsectionView(songCount: completedCount, title: "Completed", songs: completedSongs)
+                            SubsectionView(selectedSong: $selectedSong, songCount: completedCount, title: "Completed", songs: completedSongs)
                             Spacer()
                             
                         }
@@ -141,7 +142,7 @@ struct Dashboard : View {
                             .opacity(0.1)
                             .padding(.leading, 8.0)
                         HStack {
-                            SubsectionView(songCount: masteringCount, title: "Mastering", songs: masteredSongs)
+                            SubsectionView(selectedSong: $selectedSong,songCount: masteringCount, title: "Mastering", songs: masteredSongs)
                             Spacer()
                         }
                         .padding()
@@ -161,7 +162,7 @@ struct Dashboard : View {
                             .opacity(0.1)
                             .padding(.leading, 8.0)
                         HStack {
-                            SubsectionView(songCount: mixingCount, title: "Mixing", songs: mixedSongs)
+                            SubsectionView(selectedSong: $selectedSong, songCount: mixingCount, title: "Mixing", songs: mixedSongs)
                             Spacer()
                         }
                         .padding()
@@ -182,7 +183,7 @@ struct Dashboard : View {
                             .opacity(0.1)
                             .padding(.leading, 8.0)
                         HStack {
-                            SubsectionView(songCount: arrangingCount, title: "Arranging", songs: arrangingSongs)
+                            SubsectionView(selectedSong: $selectedSong, songCount: arrangingCount, title: "Arranging", songs: arrangingSongs)
                             Spacer()
                         }
                         .padding()
@@ -203,7 +204,7 @@ struct Dashboard : View {
                             .opacity(0.1)
                             .padding(.leading, 8.0)
                         HStack {
-                            SubsectionView(songCount: ideaCount, title: "Ideas", songs: ideaSongs)
+                            SubsectionView(selectedSong: $selectedSong, songCount: ideaCount, title: "Ideas", songs: ideaSongs)
                             Spacer()
                         }
                         .padding()
@@ -222,7 +223,7 @@ struct Dashboard : View {
                             .opacity(0.1)
                             .padding(.leading, 8.0)
                         HStack {
-                            SubsectionView(songCount: allCount, title: "All", songs: songs)
+                            SubsectionView(selectedSong: $selectedSong, songCount: allCount, title: "All", songs: songs)
                             Spacer()
                         }
                         .padding()
@@ -258,14 +259,21 @@ struct Dashboard : View {
 //
 // POST: A row that displays the name of the row, number of songs belonging and clickable songs
 struct SubsectionView: View {
+    @EnvironmentObject var appState: AppState
     @State private var isExpanded: Bool = true
-    @State private var selectedSong: Song?
+    @Binding private var selectedSong: Song?
     @State private var showingSongView = false
     
     let songCount: Int
     let title: String
     let songs: [Song]
-
+    
+    init(selectedSong: Binding<Song?>, songCount: Int, title: String, songs: [Song]) {
+         self._selectedSong = selectedSong
+         self.songCount = songCount
+         self.title = title
+         self.songs = songs
+     }
    
     var body: some View {
         VStack(alignment: .leading) {
@@ -301,7 +309,8 @@ struct SubsectionView: View {
                                  ForEach(songs) { song in
                                      Button(action: {
                                          self.selectedSong = song
-                                         self.showingSongView = true // open up SongView
+                                         //self.showingSongView = true // open up SongView
+                                         appState.push(.songView)
                                      }) {
                                          VStack {
                                              HStack {
@@ -315,10 +324,7 @@ struct SubsectionView: View {
                              }
                             
                          }
-                .sheet(isPresented: $showingSongView) {
-                        songView(showingSongView: $showingSongView, currentSong: $selectedSong)
-                            .frame(width:700, height: 400)
-                }
+                
                          .frame(maxWidth: .infinity)
                        
                       } // end of if
@@ -387,11 +393,13 @@ struct Option: Hashable {
 
 
 struct Dashboard_Previews: PreviewProvider {
-    @State static var sampleProject: Project? = Project(projectName: "Sample Project") // Create an optional sample project
+    @State static var sampleProject: Project? = Project(projectName: "Sample Project")
+    @State static var sampleSong: Song? = nil
+
     static var previews: some View {
-        Dashboard(project: $sampleProject)
+        Dashboard(project: $sampleProject, selectedSong: $sampleSong)
             .frame(width: 900, height: 600)  // Specifies the frame size for the view
-                       .previewLayout(.sizeThatFits)
+            .previewLayout(.sizeThatFits)
     }
 }
 

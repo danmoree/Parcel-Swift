@@ -19,7 +19,9 @@
 		653A5C2A2BED834A0000F166 /* StartUpPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A5C292BED834A0000F166 /* StartUpPage.swift */; };
 		653A5C2C2BED83750000F166 /* SongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A5C2B2BED83750000F166 /* SongView.swift */; };
 		653A5C2E2BED83B90000F166 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A5C2D2BED83B90000F166 /* Item.swift */; };
+		653F33732C3527D000080975 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653F33722C3527D000080975 /* AppState.swift */; };
 		65B17D962BFFC6A00055B0E2 /* ProjectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B17D952BFFC6A00055B0E2 /* ProjectViewModel.swift */; };
+		65EDB3C72C6FFDDB00F16BF8 /* SamplesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EDB3C62C6FFDDB00F16BF8 /* SamplesView.swift */; };
 		65F7EAF02C25599A000D0FA9 /* ProjectSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F7EAEF2C25599A000D0FA9 /* ProjectSettings.swift */; };
 /* End PBXBuildFile section */
 
@@ -38,7 +40,9 @@
 		653A5C292BED834A0000F166 /* StartUpPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartUpPage.swift; sourceTree = "<group>"; };
 		653A5C2B2BED83750000F166 /* SongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongView.swift; sourceTree = "<group>"; };
 		653A5C2D2BED83B90000F166 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		653F33722C3527D000080975 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		65B17D952BFFC6A00055B0E2 /* ProjectViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectViewModel.swift; sourceTree = "<group>"; };
+		65EDB3C62C6FFDDB00F16BF8 /* SamplesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplesView.swift; sourceTree = "<group>"; };
 		65F7EAEF2C25599A000D0FA9 /* ProjectSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectSettings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -80,9 +84,11 @@
 				653A5C122BED80D50000F166 /* ContentView.swift */,
 				653A5C1F2BED816B0000F166 /* AddProjectForm.swift */,
 				653A5C212BED819B0000F166 /* AddSongForm.swift */,
+				653F33722C3527D000080975 /* AppState.swift */,
 				653A5C272BED83210000F166 /* DashboardView.swift */,
 				65F7EAEF2C25599A000D0FA9 /* ProjectSettings.swift */,
 				653A5C2B2BED83750000F166 /* SongView.swift */,
+				65EDB3C62C6FFDDB00F16BF8 /* SamplesView.swift */,
 				653A5C192BED80D60000F166 /* Parcel.entitlements */,
 				653A5C142BED80D60000F166 /* Assets.xcassets */,
 			);
@@ -179,6 +185,7 @@
 			files = (
 				65F7EAF02C25599A000D0FA9 /* ProjectSettings.swift in Sources */,
 				653A5C2E2BED83B90000F166 /* Item.swift in Sources */,
+				65EDB3C72C6FFDDB00F16BF8 /* SamplesView.swift in Sources */,
 				653A5C2C2BED83750000F166 /* SongView.swift in Sources */,
 				653A5C262BED827C0000F166 /* Song.swift in Sources */,
 				653A5C222BED819B0000F166 /* AddSongForm.swift in Sources */,
@@ -187,6 +194,7 @@
 				653A5C2A2BED834A0000F166 /* StartUpPage.swift in Sources */,
 				653A5C202BED816B0000F166 /* AddProjectForm.swift in Sources */,
 				653A5C242BED82510000F166 /* Project.swift in Sources */,
+				653F33732C3527D000080975 /* AppState.swift in Sources */,
 				653A5C112BED80D50000F166 /* ParcelApp.swift in Sources */,
 				65B17D962BFFC6A00055B0E2 /* ProjectViewModel.swift in Sources */,
 			);

@@ -11,7 +11,7 @@ import SwiftUI
 // PRE: 1) var showingSongView, a bool that the sheet needs to either open/close this view
 //      2) var currentSong, song object to show its attributes
 struct songView: View {
-    @Binding var showingSongView: Bool
+    @EnvironmentObject private var appState: AppState
     @Binding var currentSong: Song?
     
     @State private var editingTitle: Bool = false
@@ -139,7 +139,8 @@ struct songView: View {
                             // close/dismiss sheet button
                             Button(action: {
                                 print("Button was tapped")
-                                self.showingSongView = false
+                                appState.pop()
+                                
                             }) {
                                 Image(systemName: "xmark.circle.fill")
                                     .font(.title)
@@ -652,7 +653,7 @@ struct songView: View {
                                     if let song = currentSong {
                                         deleteSong(songToRemove: song)
                                         print("Song Was Removed!")
-                                        self.showingSongView = false
+                                        
                                     }
                                 },
                                 secondaryButton: .cancel(Text("No"))
@@ -681,8 +682,8 @@ struct songView_Previews: PreviewProvider {
         let showingSongViewBinding = Binding.constant(true)
         
         // Now include showingSongView in the songView initializer
-        songView(showingSongView: showingSongViewBinding, currentSong: songBinding)
-            .frame(width: 700, height: 400)
+        songView(currentSong: songBinding)
+            .frame(width: 900, height: 600) 
     }
 }
 
