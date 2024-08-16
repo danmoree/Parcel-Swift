@@ -683,7 +683,7 @@ struct songView_Previews: PreviewProvider {
         
         // Now include showingSongView in the songView initializer
         songView(currentSong: songBinding)
-            .frame(width: 700, height: 400)
+            .frame(width: 900, height: 600) 
     }
 }
 

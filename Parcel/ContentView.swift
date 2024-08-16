@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  Parcel
 //
-//  Controls the navigation view
+//  Controls the navigation view, parent window, every view has to go through this
 //
 
 import SwiftUI
@@ -22,7 +22,7 @@ struct TransparentTitleBar: NSViewRepresentable {
         }
         return nsView
     }
-
+    
     func updateNSView(_ nsView: NSView, context: Context) {}
 }
 
@@ -40,7 +40,7 @@ struct ContentView: View {
         .init(title: "Projects", imageName: "folder.fill"),
         .init(title: "Settings", imageName: "gearshape")
     ]
-  
+    
     
     var body: some View {
         
@@ -51,34 +51,44 @@ struct ContentView: View {
                     .resizable()
                     .scaledToFill()
                     .edgesIgnoringSafeArea(.all)
-                    //.frame(width: geometry.size.width, height: geometry.size.height)
+                //.frame(width: geometry.size.width, height: geometry.size.height)
                     .blur(radius: 5.5)
-                    //.opacity(0.9)
+                //.opacity(0.9)
                     .overlay(Color.black.opacity(0.5)) // Dark overlay
             }
             
             VStack {
+                // Start up, shows once
                 if isShowingStartupPage {
                     StartUpPage(isShowingStartupPage: $isShowingStartupPage, selectedProject: $selectedProject)
                 } else {
+                    // then main view pops up
                     NavigationView {
                         Sidebar(selectedProject: $selectedProject, isShowingSettings: $isShowingSettings, selectedSong: $selectedSong)
-                     
+                        
+                        // Using the routing engine
                         Group {
                             if let currentRoute = appState.currentRoute {
+                                
                                 switch currentRoute {
+                                    
                                 case .dashboard:
                                     Dashboard(project: $selectedProject, selectedSong: $selectedSong)
                                         .transition(.opacity)
+                                    
                                 case .songView:
                                     songView(currentSong: $selectedSong)
+                                        .transition(.opacity)
+                                    
+                                case .samples:
+                                    SamplesView()
                                         .transition(.opacity)
                                 }
                                 
                             }
                         }
                         .animation(.easeInOut(duration: 0.2), value: appState.currentRoute)
-                       
+                        
                     }
                     .toolbar {
                         ToolbarItem(placement: .navigation) {
@@ -104,19 +114,19 @@ struct ContentView: View {
                     .sheet(isPresented: $isShowingSettings) {
                         DetailView3()
                     }
-                  
+                    
                 }
                 
             }
             TransparentTitleBar()
         }
     }
-        
+    
     
     private func toggleSidebar() {
-        #if os(macOS)
+#if os(macOS)
         NSApp.keyWindow?.firstResponder?.tryToPerform(#selector(NSSplitViewController.toggleSidebar(_:)), with: nil)
-        #endif
+#endif
     }
 }
 
@@ -128,43 +138,65 @@ struct Sidebar: View {
     @Binding var selectedProject: Project?
     @Binding var isShowingSettings: Bool
     @Binding var selectedSong: Song?
+    @EnvironmentObject var appState: AppState
     
     var body: some View {
         ZStack {
             
             List {
-                NavigationLink(destination: Dashboard(project: $selectedProject, selectedSong: $selectedSong)) {
+                Button(action: {
+                    appState.push(.dashboard)
+                }) {
                     Image(systemName: "folder.fill")
                     Label("Project", systemImage: "folder.fill")
                         .labelStyle(.titleOnly)
                         .fontWeight(.light)
                 }
-                NavigationLink(destination: DetailView2()) {
+                .buttonStyle(PlainButtonStyle())
+                
+                // NavigationLink(destination: Dashboard(project: $selectedProject, selectedSong: $selectedSong)) {
+                //     Image(systemName: "folder.fill")
+                //     Label("Project", systemImage: "folder.fill")
+                //         .labelStyle(.titleOnly)
+                //         .fontWeight(.light)
+                // }
+                
+                Button(action: {
+                    appState.push(.samples)
+                }) {
                     Image(systemName: "waveform")
-                    Label("Samples", systemImage: "2.circle")
+                    Label("Samples", systemImage: "waveform")
                         .labelStyle(.titleOnly)
                         .fontWeight(.light)
                 }
+                .buttonStyle(PlainButtonStyle())
+                
+                // NavigationLink(destination: DetailView2()) {
+                //     Image(systemName: "waveform")
+                //     Label("Samples", systemImage: "2.circle")
+                //         .labelStyle(.titleOnly)
+                //         .fontWeight(.light)
+                // }
                 
                 Button(action: {
-                               isShowingSettings = true // Show settings sheet
-                           }) {
-                               Image(systemName: "gearshape")
-                               Label("Settings", systemImage: "gearshape")
-                                   .labelStyle(.titleOnly)
-                           }
-                           .buttonStyle(PlainButtonStyle())
-                    
-                        
+                    isShowingSettings = true // Show settings sheet
+                }) {
+                    Image(systemName: "gearshape")
+                    Label("Settings", systemImage: "gearshape")
+                        .labelStyle(.titleOnly)
                 }
+                .buttonStyle(PlainButtonStyle())
+                
+                
             }
-            .listStyle(SidebarListStyle())
-            .navigationTitle("Sidebar")
-            
-            
         }
+        .listStyle(SidebarListStyle())
+        .navigationTitle("Sidebar")
+        
         
     }
+    
+}
 
 
 struct DetailView: View {
@@ -190,7 +222,7 @@ struct DetailView2: View {
 
 struct DetailView3: View {
     var body: some View {
-        Text("Future settings")
+        Text("Settings, Coming Soon!")
             .navigationTitle("Settings")
     }
 }
@@ -198,22 +230,22 @@ struct DetailView3: View {
     let schema = Schema([
         Song.self, Project.self
     ])
-
+    
     let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-
+    
     let modelContainer: ModelContainer
     do {
         modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
     } catch {
         fatalError("Could not create ModelContainer: \(error)")
     }
-
+    
     let sampleProjects = [
         Project(projectName: "Project 1"),
         Project(projectName: "Project 2"),
         Project(projectName: "Project 3")
     ]
-
+    
     return ContentView()
         .environmentObject(ProjectViewModel(modelContainer: modelContainer))
 }
