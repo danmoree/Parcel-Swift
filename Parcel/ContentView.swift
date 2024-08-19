@@ -112,7 +112,7 @@ struct ContentView: View {
                         }
                     }
                     .sheet(isPresented: $isShowingSettings) {
-                        DetailView3()
+                        SettingsView(showingAppSettings: $isShowingSettings)
                     }
                     
                 }
@@ -220,12 +220,8 @@ struct DetailView2: View {
     }
 }
 
-struct DetailView3: View {
-    var body: some View {
-        Text("Settings, Coming Soon!")
-            .navigationTitle("Settings")
-    }
-}
+
+
 #Preview {
     let schema = Schema([
         Song.self, Project.self
