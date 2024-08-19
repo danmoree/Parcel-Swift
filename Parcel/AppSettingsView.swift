@@ -9,16 +9,17 @@ import SwiftUI
 
 struct SettingsView: View {
     @Binding var showingAppSettings: Bool
-    @State private var selectedTab: SettingsTab = .account
+    @State private var selectedTab: SettingsTab = .appearance
 
     var body: some View {
         
-        VStack {
+        VStack(spacing: 0) {
             
             // Top row
             HStack {
                 Text("Settings")
                     .font(.title)
+                    .fontWeight(.semibold)
                     .padding()
                 
                 Spacer()
@@ -35,52 +36,74 @@ struct SettingsView: View {
                 .focusable(false)
                 .padding()
             
+                
+                
             }
             
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.gray.opacity(0.3))
+                .frame(width: .infinity, height: 1)
+           
+                
+                
+            
             HStack(spacing: 0) {
+             
                 
                 // Left Side Menu
                 VStack(alignment: .leading) {
+                    
+                    // invisable box
+                    Rectangle()
+                        .fill(Color.black.opacity(0.3))
+                        .frame(width: 1, height: 10)
+                        
+                    
                     ForEach(SettingsTab.allCases, id: \.self) { tab in
                         Button(action: {
                             selectedTab = tab
                         }) {
                             Text(tab.rawValue)
-                                .fontWeight(selectedTab == tab ? .bold : .regular)
                                 .foregroundColor(selectedTab == tab ? .white : .primary)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.vertical, 10)
                                 .padding(.horizontal, 16)
-                                .background(selectedTab == tab ? Color.blue : Color.clear)
-                                .cornerRadius(8)
+                                .background(selectedTab == tab ? Color.orange.opacity(0.8) : Color.clear)
+                                
                         }
+                        .focusable(false)
                         .buttonStyle(PlainButtonStyle())
+                        
                     }
+                    
                     Spacer()
                 }
-                .frame(minWidth: 200)
-                //.background(Color.blue)
-                .padding(.top, 20)
-                .padding(.bottom, 20)
+                .frame(minWidth: 110, maxWidth: 110, minHeight: 0, maxHeight: .infinity)
+                .background(Color(red: 0.23, green: 0.22, blue: 0.22)) // Use values between 0 and 1
+                
+                
+                
                 
                 // Right Side Content
                 VStack {
                     TabContentView(selectedTab: selectedTab)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .padding()
+                        
                 }
                 
             }
+            //.background(Color.white)
+            
         }
         //.background(Color.red)
+        .background(Color(red: 0.27, green: 0.26, blue: 0.27)) // Use values between 0 and 1
     }
 }
 
 enum SettingsTab: String, CaseIterable {
-    case account = "Account"
+    
     case appearance = "Appearance"
     case features = "Features"
-    case privacy = "Privacy"
     case about = "About"
 }
 
@@ -89,50 +112,36 @@ struct TabContentView: View {
 
     var body: some View {
         switch selectedTab {
-        case .account:
-            AccountView()
         case .appearance:
             AppearanceView()
         case .features:
             FeaturesView()
-        case .privacy:
-            PrivacyView()
         case .about:
             AboutView()
         }
     }
 }
 
-struct AccountView: View {
-    var body: some View {
-        VStack(alignment: .leading) {
-            Text("Account Settings")
-                .font(.largeTitle)
-                .padding(.bottom, 16)
-            
-            Text("Email: dapple.06.below@icloud.com")
-                .font(.body)
-            
-            Button("Log out") {
-                // Log out action
-            }
-            .padding(.top, 16)
-            
-            Spacer()
-        }
-    }
-}
+
 
 struct AppearanceView: View {
+    
     var body: some View {
-        VStack(alignment: .leading) {
-            Text("Appearance Settings")
-                .font(.largeTitle)
-                .padding(.bottom, 16)
-            
-            // Add appearance-related settings here
-            
-            Spacer()
+        
+        ScrollView {
+            VStack(alignment: .leading) {
+                
+                HStack {
+                    Text("Window")
+                        .fontWeight(.semibold)
+                        .padding()
+                    Spacer()
+                }
+                
+                // Add appearance-related settings here
+                
+                Spacer()
+            }
         }
     }
 }
@@ -151,19 +160,7 @@ struct FeaturesView: View {
     }
 }
 
-struct PrivacyView: View {
-    var body: some View {
-        VStack(alignment: .leading) {
-            Text("Privacy Settings")
-                .font(.largeTitle)
-                .padding(.bottom, 16)
-            
-            // Add privacy-related settings here
-            
-            Spacer()
-        }
-    }
-}
+
 
 struct AboutView: View {
     var body: some View {
@@ -183,5 +180,6 @@ struct AboutView: View {
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         SettingsView(showingAppSettings: .constant(true))
+            .frame(width: 600, height: 500)
     }
 }

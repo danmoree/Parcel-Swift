@@ -17,7 +17,7 @@ struct TransparentTitleBar: NSViewRepresentable {
                 window.titlebarAppearsTransparent = true
                 window.titleVisibility = .hidden
                 window.isMovableByWindowBackground = true
-                window.backgroundColor = .clear
+               // window.backgroundColor = .clear
             }
         }
         return nsView
@@ -113,7 +113,9 @@ struct ContentView: View {
                     }
                     .sheet(isPresented: $isShowingSettings) {
                         SettingsView(showingAppSettings: $isShowingSettings)
+                            .frame(width: 600, height: 500)
                     }
+                    
                     
                 }
                 
