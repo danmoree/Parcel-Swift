@@ -10,6 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     @Binding var showingAppSettings: Bool
     @State private var selectedTab: SettingsTab = .appearance
+    @EnvironmentObject private var settings: AppSettingsModel
 
     var body: some View {
         
@@ -40,9 +41,14 @@ struct SettingsView: View {
                 
             }
             
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.gray.opacity(0.3))
-                .frame(width: .infinity, height: 1)
+           // RoundedRectangle(cornerRadius: 12)
+             //   .fill(Color.gray.opacity(0.3))
+              //  .frame(width: .infinity, height: 1)
+            
+            RoundedRectangle(cornerRadius: 15, style: .continuous)
+                
+                .frame(height: 3)
+                .opacity(0.4)
            
                 
                 
@@ -96,7 +102,7 @@ struct SettingsView: View {
             
         }
         //.background(Color.red)
-        .background(Color(red: 0.27, green: 0.26, blue: 0.27)) // Use values between 0 and 1
+        //.background(Color(red: 0.27, green: 0.26, blue: 0.27)) // Use values between 0 and 1
     }
 }
 
@@ -125,7 +131,7 @@ struct TabContentView: View {
 
 
 struct AppearanceView: View {
-    
+    @EnvironmentObject private var settings: AppSettingsModel
     var body: some View {
         
         ScrollView {
@@ -138,7 +144,25 @@ struct AppearanceView: View {
                     Spacer()
                 }
                 
-                // Add appearance-related settings here
+                HStack {
+                    Text("Theme")
+                    Form {
+                              Picker("Appearance", selection: $settings.selectedTheme) {
+                                  ForEach(Theme.allCases, id: \.self) { theme in
+                                      Text(theme.rawValue.capitalized)
+                                          .tag(theme)
+                                  }
+                              }
+                              .pickerStyle(SegmentedPickerStyle())
+                              .padding()
+                          }
+                          .navigationTitle("Settings")
+                    
+                }
+                .padding(.leading,16)
+                .font(.subheadline)
+                
+                
                 
                 Spacer()
             }
@@ -181,5 +205,6 @@ struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         SettingsView(showingAppSettings: .constant(true))
             .frame(width: 600, height: 500)
+            .environmentObject(AppSettingsModel())
     }
 }

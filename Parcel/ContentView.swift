@@ -28,6 +28,7 @@ struct TransparentTitleBar: NSViewRepresentable {
 
 struct ContentView: View {
     @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var settings: AppSettingsModel
     
     @State private var isShowingStartupPage = true
     @State private var selectedProject: Project? = nil
@@ -46,16 +47,16 @@ struct ContentView: View {
         
         ZStack {
             // Background Image
-            GeometryReader { geometry in
-                Image("sands")
-                    .resizable()
-                    .scaledToFill()
-                    .edgesIgnoringSafeArea(.all)
-                //.frame(width: geometry.size.width, height: geometry.size.height)
-                    .blur(radius: 5.5)
-                //.opacity(0.9)
-                    .overlay(Color.black.opacity(0.5)) // Dark overlay
-            }
+          //  GeometryReader { geometry in
+          //      Image("sands")
+          //          .resizable()
+          //          .scaledToFill()
+          //          .edgesIgnoringSafeArea(.all)
+          //      //.frame(width: geometry.size.width, height: geometry.size.height)
+          //          .blur(radius: 5.5)
+          //      //.opacity(0.9)
+          //          .overlay(Color.black.opacity(0.5)) // Dark overlay
+          //  }
             
             VStack {
                 // Start up, shows once

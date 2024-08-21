@@ -13,6 +13,8 @@ struct ParcelApp: App {
     
     private let urlApp: URL?
     private let url: URL?
+    
+    @StateObject private var settings = AppSettingsModel()
         
         // Prints out the path for the db
        init() {
@@ -49,9 +51,24 @@ struct ParcelApp: App {
             ContentView() // Main view of the app
                 .environmentObject(ProjectViewModel(modelContainer: sharedModelContainer)) // Inject the view model into the environment
                 .environmentObject(AppState())
+                .environmentObject(settings)
+                .preferredColorScheme(settings.selectedTheme.colorScheme)
         }
         .windowStyle(HiddenTitleBarWindowStyle()) // Hides the title bar
         .modelContainer(sharedModelContainer) // Injects the model container into the environment
+    }
+}
+
+extension Theme {
+    var colorScheme: ColorScheme? {
+        switch self {
+        case .light:
+            return .light
+        case .dark:
+            return .dark
+        case .system:
+            return nil
+        }
     }
 }
 
