@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import AppKit
+import UniformTypeIdentifiers
 
 struct SettingsView: View {
     @Binding var showingAppSettings: Bool
@@ -46,9 +48,8 @@ struct SettingsView: View {
               //  .frame(width: .infinity, height: 1)
             
             RoundedRectangle(cornerRadius: 15, style: .continuous)
-                
-                .frame(height: 3)
-                .opacity(0.4)
+                .frame(height: 1)
+                .opacity(0.1)
            
                 
                 
@@ -132,20 +133,21 @@ struct TabContentView: View {
 
 struct AppearanceView: View {
     @EnvironmentObject private var settings: AppSettingsModel
+    @State private var showingImagePicker = false
+    
     var body: some View {
         
         ScrollView {
             VStack(alignment: .leading) {
                 
                 HStack {
-                    Text("Window")
+                    Text("Theme")
                         .fontWeight(.semibold)
                         .padding()
                     Spacer()
                 }
                 
                 HStack {
-                    Text("Theme")
                     Form {
                               Picker("Appearance", selection: $settings.selectedTheme) {
                                   ForEach(Theme.allCases, id: \.self) { theme in
@@ -154,20 +156,50 @@ struct AppearanceView: View {
                                   }
                               }
                               .pickerStyle(SegmentedPickerStyle())
-                              .padding()
                           }
-                          .navigationTitle("Settings")
-                    
                 }
                 .padding(.leading,16)
                 .font(.subheadline)
+
+                HStack {
+                    Text("Custom background")
+                        .fontWeight(.semibold)
+                        .padding()
+                    Spacer()
+                }
                 
-                
-                
-                Spacer()
-            }
-        }
+                HStack {
+                                  Button("Select Custom Image") {
+                                      openFileExplorer()
+                                  }
+                                  .padding(.leading)
+                                  //.background(Color.gray.opacity(0.3))
+                                  .cornerRadius(8)
+                              }
+                // Display the selected image
+                               if let backgroundImage = settings.backgroundImage {
+                                   Image(nsImage: backgroundImage)
+                                       .resizable()
+                                       .scaledToFit()
+                                       .frame(height: 200)
+                                       .padding()
+                               }
+            } // end of vstack
+        } // end of scroll view
     }
+    
+    func openFileExplorer() {
+           let panel = NSOpenPanel()
+           panel.allowedContentTypes = [UTType.png, UTType.jpeg, UTType.image]
+           panel.canChooseFiles = true
+           panel.canChooseDirectories = false
+
+           if panel.runModal() == .OK {
+               if let url = panel.url, let image = NSImage(contentsOf: url) {
+                   settings.backgroundImage = image
+               }
+           }
+       }
 }
 
 struct FeaturesView: View {

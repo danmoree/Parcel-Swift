@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import AppKit
 
 
 class AppSettingsModel: ObservableObject {
@@ -19,6 +20,14 @@ class AppSettingsModel: ObservableObject {
           }
       }
     
+    @Published var backgroundImage: NSImage? {
+            didSet {
+                if let image = backgroundImage {
+                    _ = saveImageToDocumentsDirectory(image)
+                }
+            }
+        }
+    
     init() {
         if let savedTheme = UserDefaults.standard.string(forKey: "selectedTheme"),
                   let theme = Theme(rawValue: savedTheme) {
@@ -28,9 +37,29 @@ class AppSettingsModel: ObservableObject {
                    print("No saved theme found, defaulting to system")
                    self.selectedTheme = .system // or whatever your default should be
                }
+        
+        self.backgroundImage = loadImageFromDocumentsDirectory()
     }
     
-    
+    func saveImageToDocumentsDirectory(_ image: NSImage) -> URL? {
+            guard let data = image.tiffRepresentation,
+                  let bitmap = NSBitmapImageRep(data: data),
+                  let jpegData = bitmap.representation(using: .jpeg, properties: [:]) else { return nil }
+
+            let filename = getDocumentsDirectory().appendingPathComponent("background.jpg")
+            try? jpegData.write(to: filename)
+            return filename
+        }
+
+        // Loading image from documents directory
+        func loadImageFromDocumentsDirectory() -> NSImage? {
+            let filename = getDocumentsDirectory().appendingPathComponent("background.jpg")
+            return NSImage(contentsOf: filename)
+        }
+
+        func getDocumentsDirectory() -> URL {
+            FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        }
 }
 
 enum Theme: String, CaseIterable {

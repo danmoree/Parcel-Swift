@@ -47,16 +47,19 @@ struct ContentView: View {
         
         ZStack {
             // Background Image
-          //  GeometryReader { geometry in
-          //      Image("sands")
-          //          .resizable()
-          //          .scaledToFill()
-          //          .edgesIgnoringSafeArea(.all)
-          //      //.frame(width: geometry.size.width, height: geometry.size.height)
-          //          .blur(radius: 5.5)
-          //      //.opacity(0.9)
-          //          .overlay(Color.black.opacity(0.5)) // Dark overlay
-          //  }
+            if let backgroundImage = settings.backgroundImage {
+                GeometryReader { geometry in
+                    Image(nsImage: backgroundImage)
+                        .resizable()
+                        .scaledToFill()
+                        .edgesIgnoringSafeArea(.all)
+                    //.frame(width: geometry.size.width, height: geometry.size.height)
+                        .blur(radius: 5.5)
+                    //.opacity(0.9)
+                        .overlay(Color.black.opacity(0.5)) // Dark overlay
+                }
+            }
+            
             
             VStack {
                 // Start up, shows once
@@ -247,6 +250,7 @@ struct DetailView2: View {
     
     return ContentView()
         .environmentObject(ProjectViewModel(modelContainer: modelContainer))
+        .environmentObject(AppSettingsModel())
 }
 
 struct Sidebar_Previews: PreviewProvider {
