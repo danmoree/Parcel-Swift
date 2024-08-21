@@ -108,10 +108,10 @@ struct SettingsView: View {
 }
 
 enum SettingsTab: String, CaseIterable {
-    
     case appearance = "Appearance"
-    case features = "Features"
+    //case features = "Features"
     case about = "About"
+    
 }
 
 struct TabContentView: View {
@@ -121,8 +121,8 @@ struct TabContentView: View {
         switch selectedTab {
         case .appearance:
             AppearanceView()
-        case .features:
-            FeaturesView()
+        //case .features:
+          //  FeaturesView()
         case .about:
             AboutView()
         }
@@ -248,16 +248,28 @@ struct FeaturesView: View {
 
 struct AboutView: View {
     var body: some View {
-        VStack(alignment: .leading) {
-            Text("About")
-                .font(.largeTitle)
-                .padding(.bottom, 16)
+        VStack() {
             
-            Text("App version: 1.0.0")
-                .font(.body)
+            Image("ChordCraft1")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 250, height: 130, alignment: .centerLastTextBaseline)
+                .padding(.top, 44)
+            
+            Text("Parcel")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+            
+            Text("Version 0.1.0")
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .foregroundStyle(.gray)
             
             Spacer()
+            Text("Created by Daniel Moreno")
+                .bold()
         }
+        .padding()
     }
 }
 

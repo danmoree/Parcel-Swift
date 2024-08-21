@@ -93,7 +93,7 @@ struct ProjectView: View {
                        .font(.largeTitle)
                        .fontWeight(.bold)
                    
-                   Text("Version 1.0.0")
+                   Text("Version 0.1.0")
                        .font(.subheadline)
                        .fontWeight(.medium)
                        .foregroundStyle(.gray)
