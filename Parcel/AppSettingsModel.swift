@@ -28,6 +28,18 @@ class AppSettingsModel: ObservableObject {
             }
         }
     
+    @Published var blurAmount: Double {
+        didSet {
+            UserDefaults.standard.set(blurAmount, forKey: "blurAmount")
+        }
+    }
+    
+    @Published var brightnessAmount: Double {
+        didSet {
+            UserDefaults.standard.set(brightnessAmount, forKey: "brightnessAmount")
+        }
+    }
+    
     init() {
         if let savedTheme = UserDefaults.standard.string(forKey: "selectedTheme"),
                   let theme = Theme(rawValue: savedTheme) {
@@ -38,7 +50,10 @@ class AppSettingsModel: ObservableObject {
                    self.selectedTheme = .system // or whatever your default should be
                }
         
+        self.blurAmount = UserDefaults.standard.double(forKey: "blurAmount")
+        self.brightnessAmount = UserDefaults.standard.double(forKey: "brightnessAmount")
         self.backgroundImage = loadImageFromDocumentsDirectory()
+        
     }
     
     func saveImageToDocumentsDirectory(_ image: NSImage) -> URL? {

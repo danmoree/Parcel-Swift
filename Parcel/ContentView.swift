@@ -54,9 +54,9 @@ struct ContentView: View {
                         .scaledToFill()
                         .edgesIgnoringSafeArea(.all)
                     //.frame(width: geometry.size.width, height: geometry.size.height)
-                        .blur(radius: 5.5)
+                        .blur(radius: settings.blurAmount * 10)
                     //.opacity(0.9)
-                        .overlay(Color.black.opacity(0.5)) // Dark overlay
+                        .overlay(Color.black.opacity(settings.brightnessAmount)) // Dark overlay
                 }
             }
             

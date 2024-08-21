@@ -13,7 +13,7 @@ struct SettingsView: View {
     @Binding var showingAppSettings: Bool
     @State private var selectedTab: SettingsTab = .appearance
     @EnvironmentObject private var settings: AppSettingsModel
-
+    
     var body: some View {
         
         VStack(spacing: 0) {
@@ -38,24 +38,24 @@ struct SettingsView: View {
                 .buttonStyle(PlainButtonStyle())
                 .focusable(false)
                 .padding()
-            
+                
                 
                 
             }
             
-           // RoundedRectangle(cornerRadius: 12)
-             //   .fill(Color.gray.opacity(0.3))
-              //  .frame(width: .infinity, height: 1)
+            // RoundedRectangle(cornerRadius: 12)
+            //   .fill(Color.gray.opacity(0.3))
+            //  .frame(width: .infinity, height: 1)
             
             RoundedRectangle(cornerRadius: 15, style: .continuous)
                 .frame(height: 1)
                 .opacity(0.1)
-           
-                
-                
+            
+            
+            
             
             HStack(spacing: 0) {
-             
+                
                 
                 // Left Side Menu
                 VStack(alignment: .leading) {
@@ -64,7 +64,7 @@ struct SettingsView: View {
                     Rectangle()
                         .fill(Color.black.opacity(0.3))
                         .frame(width: 1, height: 10)
-                        
+                    
                     
                     ForEach(SettingsTab.allCases, id: \.self) { tab in
                         Button(action: {
@@ -76,7 +76,7 @@ struct SettingsView: View {
                                 .padding(.vertical, 10)
                                 .padding(.horizontal, 16)
                                 .background(selectedTab == tab ? Color.orange.opacity(0.8) : Color.clear)
-                                
+                            
                         }
                         .focusable(false)
                         .buttonStyle(PlainButtonStyle())
@@ -95,7 +95,7 @@ struct SettingsView: View {
                 VStack {
                     TabContentView(selectedTab: selectedTab)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        
+                    
                 }
                 
             }
@@ -116,7 +116,7 @@ enum SettingsTab: String, CaseIterable {
 
 struct TabContentView: View {
     var selectedTab: SettingsTab
-
+    
     var body: some View {
         switch selectedTab {
         case .appearance:
@@ -149,18 +149,18 @@ struct AppearanceView: View {
                 
                 HStack {
                     Form {
-                              Picker("Appearance", selection: $settings.selectedTheme) {
-                                  ForEach(Theme.allCases, id: \.self) { theme in
-                                      Text(theme.rawValue.capitalized)
-                                          .tag(theme)
-                                  }
-                              }
-                              .pickerStyle(SegmentedPickerStyle())
-                          }
+                        Picker("Appearance", selection: $settings.selectedTheme) {
+                            ForEach(Theme.allCases, id: \.self) { theme in
+                                Text(theme.rawValue.capitalized)
+                                    .tag(theme)
+                            }
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                    }
                 }
                 .padding(.leading,16)
                 .font(.subheadline)
-
+                
                 HStack {
                     Text("Custom background")
                         .fontWeight(.semibold)
@@ -169,37 +169,65 @@ struct AppearanceView: View {
                 }
                 
                 HStack {
-                                  Button("Select Custom Image") {
-                                      openFileExplorer()
-                                  }
-                                  .padding(.leading)
-                                  //.background(Color.gray.opacity(0.3))
-                                  .cornerRadius(8)
-                              }
+                    Button("Select Custom Image") {
+                        openFileExplorer()
+                    }
+                    .padding(.leading)
+                    //.background(Color.gray.opacity(0.3))
+                    .cornerRadius(8)
+                }
+                VStack(alignment: .leading) {
+                    Text("Background Blur")
+                        .fontWeight(.semibold)
+                        .padding([.top, .leading])
+                    
+                    Slider(value: $settings.blurAmount, in: 0.0...1.0)
+                        .padding([.leading, .trailing])
+                        .frame(width: 150, height: 20)
+                }
+                
+                VStack(alignment: .leading) {
+                    Text("Background Brightness")
+                        .fontWeight(.semibold)
+                        .padding([.top, .leading])
+                    
+                    Slider(value: Binding(
+                        get: {
+                            1.0 - self.settings.brightnessAmount
+                        },
+                        set: { newValue in
+                            self.settings.brightnessAmount = 1.0 - newValue
+                        }
+                    ), in: 0.0...1.0)
+                    .padding([.leading, .trailing])
+                    .frame(width: 150, height: 20)
+                }
                 // Display the selected image
-                               if let backgroundImage = settings.backgroundImage {
-                                   Image(nsImage: backgroundImage)
-                                       .resizable()
-                                       .scaledToFit()
-                                       .frame(height: 200)
-                                       .padding()
-                               }
+                if let backgroundImage = settings.backgroundImage {
+                    Image(nsImage: backgroundImage)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 150)
+                        .blur(radius: settings.blurAmount * 10)
+                        .padding()
+                }
+                
             } // end of vstack
         } // end of scroll view
     }
     
     func openFileExplorer() {
-           let panel = NSOpenPanel()
-           panel.allowedContentTypes = [UTType.png, UTType.jpeg, UTType.image]
-           panel.canChooseFiles = true
-           panel.canChooseDirectories = false
-
-           if panel.runModal() == .OK {
-               if let url = panel.url, let image = NSImage(contentsOf: url) {
-                   settings.backgroundImage = image
-               }
-           }
-       }
+        let panel = NSOpenPanel()
+        panel.allowedContentTypes = [UTType.png, UTType.jpeg, UTType.image]
+        panel.canChooseFiles = true
+        panel.canChooseDirectories = false
+        
+        if panel.runModal() == .OK {
+            if let url = panel.url, let image = NSImage(contentsOf: url) {
+                settings.backgroundImage = image
+            }
+        }
+    }
 }
 
 struct FeaturesView: View {
