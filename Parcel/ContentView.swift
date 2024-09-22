@@ -117,7 +117,7 @@ struct ContentView: View {
                     }
                     .sheet(isPresented: $isShowingSettings) {
                         SettingsView(showingAppSettings: $isShowingSettings)
-                            .frame(width: 600, height: 500)
+                            .frame(width: 700, height: 600)
                     }
                     
                     

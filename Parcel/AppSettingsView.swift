@@ -75,7 +75,7 @@ struct SettingsView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.vertical, 10)
                                 .padding(.horizontal, 16)
-                                .background(selectedTab == tab ? Color.orange.opacity(0.8) : Color.clear)
+                                .background(selectedTab == tab ? Color.gray.opacity(0.8) : Color.clear)
                             
                         }
                         .focusable(false)
