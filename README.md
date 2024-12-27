@@ -1,6 +1,12 @@
 
-<img src="https://github.com/danmoree/Parcel-Swift/assets/123407190/01676713-3325-4e50-821d-29169ee743da" alt="alt text" width="500">
-<img src="https://github.com/danmoree/Parcel-Swift/assets/123407190/8efb5d74-c4ed-4d77-bbeb-e046ce44cc36" alt="alt text" width="500">
+<img src="https://github.com/user-attachments/assets/0bee4083-5f67-4947-8cca-b3b3a1ffdae1" alt="alt text" width="500">
+<img src="https://github.com/user-attachments/assets/c8885f5f-9e4d-47fe-95e8-986f40966179" alt="alt text" width="500">
+<img src="https://github.com/user-attachments/assets/13a09747-dc60-4398-9b5c-dc0b14996bd1" alt="alt text" width="500">
+<img src="https://github.com/user-attachments/assets/13dfedce-7c2d-46bb-bd9e-3d9ecef81196" alt="alt text" width="500">
+
+
+
+
 
 
 # Parcel - The app for music producers
